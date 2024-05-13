@@ -70,6 +70,7 @@ class _MyAppState extends State<MyApp> {
                 children: [
                   _buildGameItem('飞行棋', '1468180338417074177'),
                   _buildGameItem('跳一跳', '1680881367829176322'),
+                  _buildGameItem('扫雷雷', '1468434401847222273'),
                 ],
               ),
             ),
