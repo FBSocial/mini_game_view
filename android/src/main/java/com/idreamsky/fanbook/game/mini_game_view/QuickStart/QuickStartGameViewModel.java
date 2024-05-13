@@ -22,6 +22,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.decorator.SudFSMMGListener;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.decorator.SudFSTAPPDecorator;
 
@@ -55,7 +56,8 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
 
     // 使用的UserId。这里随机生成作演示，开发者将其修改为业务使用的唯一userId
     // Used UserId. Here it is randomly generated for demonstration purposes. Developers should modify it to the unique userId used for the business.
-    public static String userId = QuickStartUtils.genUserID();
+//    public static String userId = QuickStartUtils.genUserID();
+    public String userId;
 
     // 游戏自定义安全操作区域
     // Customized security operation zone for the game.
@@ -67,7 +69,12 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
 
     // 游戏View回调
     // Game View callback.
-    public final MutableLiveData<View> gameViewLiveData = new MutableLiveData<>();
+//    public final MutableLiveData<View> gameViewLiveData = new MutableLiveData<>();
+    public GameViewChangeListener gameViewChangeListener;
+
+    public void setGameViewChangeListener(GameViewChangeListener gameViewChangeListener) {
+        this.gameViewChangeListener = gameViewChangeListener;
+    }
 
     /**
      * 向接入方服务器获取code
@@ -234,7 +241,8 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
      */
     @Override
     protected void onAddGameView(View gameView) {
-        gameViewLiveData.setValue(gameView);
+//        gameViewLiveData.setValue(gameView);
+        gameViewChangeListener.onChanged(gameView);
     }
 
     /**
@@ -243,7 +251,8 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
      */
     @Override
     protected void onRemoveGameView() {
-        gameViewLiveData.setValue(null);
+//        gameViewLiveData.setValue(null);
+        gameViewChangeListener.onChanged(null);
     }
 
     // ************ 上面是基础能力以及必要配置，下面讲解状态交互

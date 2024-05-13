@@ -87,7 +87,7 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
      * @param gameId     游戏id，传入不同的游戏id，即可加载不同的游戏，传0等同于关闭游戏
      *                   Game ID, passing a different gameId will load a different game. Passing 0 is equivalent to closing the game.
      */
-    public void switchGame(Activity activity, String gameRoomId, long gameId) {
+    public void initGame(Activity activity, String gameRoomId, long gameId) {
         if (TextUtils.isEmpty(gameRoomId)) {
             Toast.makeText(activity, "gameRoomId can not be empty", Toast.LENGTH_LONG).show();
             return;
@@ -278,7 +278,7 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
      * 向接入方服务器获取code
      * Get the code from the integration party server.
      */
-    protected abstract void getCode(Activity activity, String userId, String appId, GameGetCodeListener listener);
+    public abstract void getCode(Activity activity, String userId, String appId, GameGetCodeListener listener);
 
     /**
      * 设置当前用户id(接入方定义)
