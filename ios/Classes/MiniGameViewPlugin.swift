@@ -6,7 +6,7 @@ public class MiniGameViewPlugin: NSObject, FlutterPlugin {
     let channel = FlutterMethodChannel(name: "mini_game_view", binaryMessenger: registrar.messenger())
     let instance = MiniGameViewPlugin()
       let factory = MyCustomViewFactory(messenger: registrar.messenger())
-         registrar.register(factory, withId: "my_custom_view")
+         registrar.register(factory, withId: "mini-game-view-type")
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 

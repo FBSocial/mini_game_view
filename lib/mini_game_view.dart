@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -26,10 +26,10 @@ class MiniGameView extends StatelessWidget {
     creationParams['gameId'] = gameId;
     creationParams['userId'] = userId;
     if (Platform.isIOS) {
-      return const UiKitView(
-        viewType: 'my_custom_view',
-        creationParams: {'viewId': 'miniGame'},
-        creationParamsCodec: StandardMessageCodec(),
+      return UiKitView(
+        viewType: viewType,
+        creationParams: creationParams,
+        creationParamsCodec: const StandardMessageCodec(),
       );
     }
     return PlatformViewLink(

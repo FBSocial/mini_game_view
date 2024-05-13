@@ -31,6 +31,12 @@
 /// 游戏事件处理实例
 @property(nonatomic, strong)QuickStartSudGameEventHandler *gameEventHandler;
 
+@property(nonatomic, strong)NSString *gameId;
+
+@property(nonatomic, strong)NSString *userId;
+
+@property(nonatomic, strong)NSString *roomId;
+
 @end
 
 
@@ -48,6 +54,9 @@
   self = [super initWithFrame:frame];
   if (self) {
     _viewId = viewId;
+      self.gameId = args[@"gameId"];
+      self.userId = args[@"userId"];
+      self.roomId = args[@"roomId"];
     NSString* channelName = [NSString stringWithFormat:@"my_custom_view_%" PRId64, viewId];
     _methodChannel = [FlutterMethodChannel methodChannelWithName:channelName binaryMessenger:messenger];
       [self addSubview:self.gameView];
@@ -68,9 +77,21 @@
       /// 2. step
       // 加载游戏
       // Load the game
-      [self loadGame:1468434401847222273];
+      if (self.gameId != nil) {
+          [self loadGame:[self.gameId integerValue]];
+      }
+      
+      UIButton * button = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 40, 40)];
+      button.backgroundColor = [UIColor redColor];
+      [button setTitle:@"准备" forState:UIControlStateNormal];
+      [button addTarget:self action:@selector(actionButton) forControlEvents:UIControlEventTouchUpInside];
+      [self addSubview:button];
   }
   return self;
+}
+
+- (void)actionButton {
+    [self.gameEventHandler.sudFSTAPPDecorator notifyAppCommonSelfReady:YES];
 }
 
 - (UIView *)gameView {
@@ -101,7 +122,7 @@
     sudGameConfigModel.gameId = gameId;
     // 指定游戏房间，相同房间号的人在同一游戏大厅中
     // Assign a game room, and people with the same room number are in the same game hall
-    sudGameConfigModel.roomId = @"1000";
+    sudGameConfigModel.roomId = self.roomId;
     // 配置游戏内显示语言
     // Configure the in-game display language
     sudGameConfigModel.language = @"zh-CN";
@@ -110,7 +131,7 @@
     sudGameConfigModel.gameView = self.gameView;
     // 当前用户ID
     // Current user id
-    sudGameConfigModel.userId = @"12234342";
+    sudGameConfigModel.userId = self.userId;
 
     [self.sudGameManager loadGame:sudGameConfigModel];
 }

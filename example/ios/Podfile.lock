@@ -1,5 +1,7 @@
 PODS:
   - Flutter (1.0.0)
+  - flutter_keyboard_visibility (0.0.1):
+    - Flutter
   - Masonry (1.1.0)
   - mini_game_view (0.0.1):
     - Flutter
@@ -14,6 +16,7 @@ PODS:
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - mini_game_view (from `.symlinks/plugins/mini_game_view/ios`)
 
 SPEC REPOS:
@@ -26,11 +29,14 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  flutter_keyboard_visibility:
+    :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
   mini_game_view:
     :path: ".symlinks/plugins/mini_game_view/ios"
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   mini_game_view: 8552cd0eb9e417920ee7ac11d6ce3e5f75295809
   MJExtension: 21c5f6f8c4d5d8844b7ae8fbae08fed0b501f961
