@@ -17,11 +17,7 @@ class MethodChannelMiniGameView extends MiniGameViewPlatform {
   }
 
   @override
-  Future<void> loadGameView(
-      {required String roomId, required String gameId}) async {
-    await methodChannel.invokeMethod('loadGameView', {
-      'roomId': roomId,
-      'gameId': gameId,
-    });
+  Future<void> loadGameView() async {
+    await methodChannel.invokeMethod('loadGameView');
   }
 }

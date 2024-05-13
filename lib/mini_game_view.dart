@@ -1,32 +1,30 @@
+import 'package:flutter/foundation.dart';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-// class MiniGameView {
-//   Future<String?> getPlatformVersion() {
-//     return MiniGameViewPlatform.instance.getPlatformVersion();
-//   }
-// }
-
 class MiniGameView extends StatelessWidget {
-  const MiniGameView({super.key});
+  final String roomId;
+  final String gameId;
+  final String userId;
+
+  const MiniGameView({
+    required this.roomId,
+    required this.gameId,
+    required this.userId,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // This is used in the platform side to register the view.
-    const String viewType = '<platform-view-type>';
-    // Pass parameters to the platform side.
-    const Map<String, dynamic> creationParams = <String, dynamic>{};
-    // return AndroidView(
-    //   viewType: viewType,
-    //   layoutDirection: TextDirection.ltr,
-    //   creationParams: creationParams,
-    //   creationParamsCodec: const StandardMessageCodec(),
-    // );
+    const String viewType = '<mini-game-view-type>';
+    Map<String, dynamic> creationParams = <String, dynamic>{};
+    creationParams['roomId'] = roomId;
+    creationParams['gameId'] = gameId;
+    creationParams['userId'] = userId;
     if (Platform.isIOS) {
       return const UiKitView(
         viewType: 'my_custom_view',

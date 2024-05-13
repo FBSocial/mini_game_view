@@ -27,8 +27,7 @@ abstract class MiniGameViewPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<void> loadGameView(
-      {required String roomId, required String gameId}) async {
+  Future<void> loadGameView() async {
     throw UnimplementedError('loadGameView() has not been implemented.');
   }
 }

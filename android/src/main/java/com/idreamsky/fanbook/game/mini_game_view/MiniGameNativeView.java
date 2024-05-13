@@ -45,12 +45,16 @@ class MiniGameNativeView implements SudFSMMGListener, PlatformView, MethodChanne
     private final SudFSMMGDecorator sudFSMMGDecorator = new SudFSMMGDecorator();
     private final QuickStartGameViewModel gameViewModel = new QuickStartGameViewModel();
 
-    private String userId = QuickStartGameViewModel.userId;
+    private String userId;
+
+    private String gameId;
+    private String roomId;
 
     private View mGameView;
 
     MiniGameNativeView(Activity activity, FlutterPlugin.FlutterPluginBinding binding, @NonNull Context context, int id, @Nullable Map<String, Object> creationParams) {
         init(activity, context, binding);
+        initArguments(creationParams);
         containerView.setBackgroundColor(Color.GREEN);
         Log.d(TAG, "MiniGameNativeView: ");
     }
@@ -64,13 +68,19 @@ class MiniGameNativeView implements SudFSMMGListener, PlatformView, MethodChanne
         containerView.setLayoutParams(new FrameLayout.LayoutParams(200, 100));
     }
 
-    private void loginGame(String roomId, long gameId) {
+    private void initArguments(Map<String, Object> creationParams) {
+        userId = (String) creationParams.get("userId");
+        roomId = (String) creationParams.get("roomId");
+        gameId = (String) creationParams.get("gameId");
+    }
+
+    private void loginGame() {
         // 请求登录code
         // Request login code
         gameViewModel.getCode(null, userId, QuickStartGameViewModel.SudMGP_APP_ID, new BaseGameViewModel.GameGetCodeListener() {
             @Override
             public void onSuccess(String code) {
-                initSdk(roomId, gameId, code);
+                initSdk(code);
             }
 
             @Override
@@ -80,7 +90,7 @@ class MiniGameNativeView implements SudFSMMGListener, PlatformView, MethodChanne
         });
     }
 
-    private void initSdk(String roomId, long gameId, String code) {
+    private void initSdk(String code) {
         // 初始化sdk
         // Initialize the SDK
         SudInitSDKParamModel params = new SudInitSDKParamModel();
@@ -92,7 +102,7 @@ class MiniGameNativeView implements SudFSMMGListener, PlatformView, MethodChanne
         SudMGP.initSDK(params, new ISudListenerInitSDK() {
             @Override
             public void onSuccess() {
-                loadGame(code, userId, roomId, gameId);
+                loadGame(code);
             }
 
             @Override
@@ -109,14 +119,14 @@ class MiniGameNativeView implements SudFSMMGListener, PlatformView, MethodChanne
         });
     }
 
-    private void loadGame(String code, String userId, String roomId, long gameId) {
+    private void loadGame(String code) {
         // 给装饰类设置回调
         // Set a callback for the decorator class.
         sudFSMMGDecorator.setSudFSMMGListener(this);
 
         // 调用游戏sdk加载游戏
         // Invoke the game SDK to load the game.
-        ISudFSTAPP iSudFSTAPP = SudMGP.loadMG(mActivity, userId, roomId, code, gameId, "zh-CN", sudFSMMGDecorator);
+        ISudFSTAPP iSudFSTAPP = SudMGP.loadMG(mActivity, userId, roomId, code, Long.parseLong(gameId), "zh-CN", sudFSMMGDecorator);
 
         // 如果返回空，则代表参数问题或者非主线程
         // If null is returned, it indicates a parameter issue or a non-main thread.
@@ -170,10 +180,7 @@ class MiniGameNativeView implements SudFSMMGListener, PlatformView, MethodChanne
             result.success("Android " + android.os.Build.VERSION.RELEASE);
         } else if (call.method.equals("loadGameView")) {
             HashMap<String, Object> arguments = (HashMap<String, Object>) call.arguments;
-            String roomId = (String) arguments.get("roomId");
-            String gameIdStr = (String) arguments.get("gameId");
-            long gameId = Long.parseLong(gameIdStr);
-            loginGame(roomId, gameId);
+            loginGame();
             result.success(true);
         } else {
             result.notImplemented();
