@@ -1,0 +1,42 @@
+PODS:
+  - Flutter (1.0.0)
+  - Masonry (1.1.0)
+  - mini_game_view (0.0.1):
+    - Flutter
+    - Masonry (= 1.1.0)
+    - SudMGP (= 1.3.7)
+    - SudMGPWrapper (= 1.3.7)
+  - MJExtension (3.4.1)
+  - SudMGP (1.3.7)
+  - SudMGPWrapper (1.3.7):
+    - MJExtension (~> 3.4.1)
+    - SudMGP (~> 1.3.7)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - mini_game_view (from `.symlinks/plugins/mini_game_view/ios`)
+
+SPEC REPOS:
+  trunk:
+    - Masonry
+    - MJExtension
+    - SudMGP
+    - SudMGPWrapper
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  mini_game_view:
+    :path: ".symlinks/plugins/mini_game_view/ios"
+
+SPEC CHECKSUMS:
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  mini_game_view: 8552cd0eb9e417920ee7ac11d6ce3e5f75295809
+  MJExtension: 21c5f6f8c4d5d8844b7ae8fbae08fed0b501f961
+  SudMGP: 28cfb50e9574ad3e1c07c1570f772969b56cfdbc
+  SudMGPWrapper: 761832993f2fc154399d72de9756a02e73be593a
+
+PODFILE CHECKSUM: 1f93d1071281e3796a30778d97735574e433bc14
+
+COCOAPODS: 1.14.3
