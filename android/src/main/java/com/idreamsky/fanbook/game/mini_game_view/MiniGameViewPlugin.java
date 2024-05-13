@@ -49,7 +49,7 @@ public class MiniGameViewPlugin implements FlutterPlugin, MethodCallHandler, Act
     public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
         flutterPluginBinding
                 .getPlatformViewRegistry()
-                .registerViewFactory("<mini-game-view-type>", new MiniGameNativeViewFactory(binding.getActivity(), flutterPluginBinding));
+                .registerViewFactory("mini-game-view-type", new MiniGameNativeViewFactory(binding.getActivity(), flutterPluginBinding));
     }
 
     @Override

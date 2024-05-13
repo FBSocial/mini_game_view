@@ -20,7 +20,7 @@ class MiniGameView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String viewType = '<mini-game-view-type>';
+    const String viewType = 'mini-game-view-type';
     Map<String, dynamic> creationParams = <String, dynamic>{};
     creationParams['roomId'] = roomId;
     creationParams['gameId'] = gameId;
