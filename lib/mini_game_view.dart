@@ -1,11 +1,10 @@
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-
-import 'mini_game_view_platform_interface.dart';
 
 // class MiniGameView {
 //   Future<String?> getPlatformVersion() {
@@ -28,10 +27,16 @@ class MiniGameView extends StatelessWidget {
     //   creationParams: creationParams,
     //   creationParamsCodec: const StandardMessageCodec(),
     // );
+    if (Platform.isIOS) {
+      return const UiKitView(
+        viewType: 'my_custom_view',
+        creationParams: {'viewId': 'miniGame'},
+        creationParamsCodec: StandardMessageCodec(),
+      );
+    }
     return PlatformViewLink(
       viewType: viewType,
-      surfaceFactory:
-          (context, controller) {
+      surfaceFactory: (context, controller) {
         return AndroidViewSurface(
           controller: controller as AndroidViewController,
           gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
@@ -55,5 +60,3 @@ class MiniGameView extends StatelessWidget {
     );
   }
 }
-
-
