@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mini_game_view/mini_game_controller.dart';
 import 'dart:async';
 
 import 'package:mini_game_view/mini_game_view.dart';
@@ -11,12 +12,14 @@ class GameViewArguments {
   final String roomId;
   final String gameId;
   final String userId;
+  final String loginCode;
 
   GameViewArguments({
     this.gameName = 'mini game',
     required this.roomId,
     required this.gameId,
     required this.userId,
+    required this.loginCode,
   });
 }
 
@@ -31,11 +34,18 @@ class _GameViewState extends State<GameView> {
   bool showMessage = true;
   final focusNode = FocusNode();
   late GameViewArguments arguments;
+  late MiniGameController miniGameController;
 
   @override
   void initState() {
     super.initState();
     arguments = Get.arguments as GameViewArguments;
+    miniGameController = MiniGameController(
+      userId: arguments.userId,
+      gameId: arguments.gameId,
+      roomId: arguments.roomId,
+      loginCode: arguments.loginCode,
+    );
   }
 
   @override
@@ -48,11 +58,7 @@ class _GameViewState extends State<GameView> {
       backgroundColor: Colors.red,
       body: Stack(
         children: [
-          MiniGameView(
-            roomId: arguments.roomId,
-            gameId: arguments.gameId,
-            userId: arguments.userId,
-          ),
+          MiniGameView(controller: miniGameController),
           Positioned(
             bottom: 0,
             left: 0,

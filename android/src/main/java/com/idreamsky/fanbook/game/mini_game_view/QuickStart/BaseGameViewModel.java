@@ -87,7 +87,7 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
      * @param gameId     游戏id，传入不同的游戏id，即可加载不同的游戏，传0等同于关闭游戏
      *                   Game ID, passing a different gameId will load a different game. Passing 0 is equivalent to closing the game.
      */
-    public void initGame(Activity activity, String gameRoomId, long gameId) {
+    public void initGame(Activity activity, String gameRoomId, String loginCode, long gameId) {
         if (TextUtils.isEmpty(gameRoomId)) {
             Toast.makeText(activity, "gameRoomId can not be empty", Toast.LENGTH_LONG).show();
             return;
@@ -98,7 +98,7 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
         destroyMG();
         this.gameRoomId = gameRoomId;
         playingGameId = gameId;
-        login(activity, gameId);
+        login(activity, loginCode, gameId);
     }
 
     /**
@@ -115,26 +115,28 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
      * @param gameId   游戏id
      *                 Game ID.
      */
-    private void login(Activity activity, long gameId) {
+    private void login(Activity activity, String loginCode, long gameId) {
         if (activity.isDestroyed() || gameId <= 0) {
             return;
         }
-        // 请求登录code
-        // Request login code
-        getCode(activity, getUserId(), getAppId(), new GameGetCodeListener() {
-            @Override
-            public void onSuccess(String code) {
-                if (gameId != playingGameId) {
-                    return;
-                }
-                initSdk(activity, gameId, code);
-            }
+        initSdk(activity, gameId, loginCode);
 
-            @Override
-            public void onFailed() {
-                delayLoadGame(activity, gameId);
-            }
-        });
+//        // 请求登录code
+//        // Request login code
+//        getCode(activity, getUserId(), getAppId(), new GameGetCodeListener() {
+//            @Override
+//            public void onSuccess(String code) {
+//                if (gameId != playingGameId) {
+//                    return;
+//                }
+//                initSdk(activity, gameId, code);
+//            }
+//
+//            @Override
+//            public void onFailed() {
+//                delayLoadGame(activity, gameId);
+//            }
+//        });
     }
 
     /**
@@ -174,7 +176,7 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
                     Toast.makeText(activity, "initSDK onFailure:" + errMsg + "(" + errCode + ")", Toast.LENGTH_LONG).show();
                 }
 
-                delayLoadGame(activity, gameId);
+                delayLoadGame(activity, code, gameId);
             }
         });
     }
@@ -214,7 +216,7 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
         // If null is returned, it indicates a parameter issue or a non-main thread.
         if (iSudFSTAPP == null) {
             Toast.makeText(activity, "loadMG params error", Toast.LENGTH_LONG).show();
-            delayLoadGame(activity, gameId);
+            delayLoadGame(activity, code, gameId);
             return;
         }
 
@@ -240,11 +242,11 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
      * @param gameId   游戏id
      *                 Game ID.
      */
-    private void delayLoadGame(Activity activity, long gameId) {
+    private void delayLoadGame(Activity activity, String loginCode, long gameId) {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                login(activity, gameId);
+                login(activity, loginCode, gameId);
             }
         }, 5000);
     }
