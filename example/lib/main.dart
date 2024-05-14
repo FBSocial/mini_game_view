@@ -100,31 +100,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> openGameView(String gameName, String gameId) async {
-    String code = '';
-    try {
-      final dio = Dio();
-      dio.options.responseType = ResponseType.json;
-      final result =
-          await dio.post('https://mgp-hello.sudden.ltd/login/v3', data: {
-        'user_id': _userIdController.text,
-      });
-      final data = result.data;
-      // {
-      //   ret_code: 0,
-      //   data: {
-      //      code: 0!@#$!eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIxNzE1NjY5ODQxNDMwIiwiZXhwIjoxNzE1NjczNDczLCJhcHBfaWQiOiIxNDYxNTY0MDgwMDUyNTA2NjM2In0.qqWDaQau6YTv27_I2tQwi5Qq6B9rPcPT-Yofw0bwOuY,
-      //      expire_date: 1715673473890,
-      //      avatar_url: https://dev-sud-static.sudden.ltd/avatar/13.jpg
-      //   }
-      // }
-      if (data is Map && data['data'] != null && data['data'] is Map) {
-        code = data['data']['code'];
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-    if (code.isEmpty) return;
-
     Get.to(
       () => const GameView(),
       arguments: GameViewArguments(
@@ -132,7 +107,6 @@ class _MyAppState extends State<MyApp> {
         gameId: gameId,
         userId: _userIdController.text,
         roomId: _roomIdController.text,
-        loginCode: code,
       ),
     );
   }

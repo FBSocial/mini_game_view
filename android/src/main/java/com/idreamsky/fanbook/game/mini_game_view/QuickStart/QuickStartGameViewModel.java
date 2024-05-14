@@ -11,6 +11,7 @@ import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.state.SudMGPMGSta
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
 
 import okhttp3.Call;
@@ -42,20 +43,19 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
 
     // Sud平台申请的appId
     // The appId obtained from Sud platform application.
-    public static String SudMGP_APP_ID = "1461564080052506636";
+//    public static String SudMGP_APP_ID = "1461564080052506636";
 
     // Sud平台申请的appKey
     // The appKey obtained from Sud platform application.
-    public static String SudMGP_APP_KEY = "03pNxK2lEXsKiiwrBQ9GbH541Fk2Sfnc";
+//    public static String SudMGP_APP_KEY = "03pNxK2lEXsKiiwrBQ9GbH541Fk2Sfnc";
 
     // true 加载游戏时为测试环境 false 加载游戏时为生产环境
     // true for loading the game in the testing environment, false for loading the game in the production environment.
-    public static final boolean GAME_IS_TEST_ENV = true;
+//    public static final boolean GAME_IS_TEST_ENV = true;
 
     // 使用的UserId。这里随机生成作演示，开发者将其修改为业务使用的唯一userId
     // Used UserId. Here it is randomly generated for demonstration purposes. Developers should modify it to the unique userId used for the business.
 //    public static String userId = QuickStartUtils.genUserID();
-    public String userId;
 
     // 游戏自定义安全操作区域
     // Customized security operation zone for the game.
@@ -160,7 +160,7 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
      */
     @Override
     protected String getAppId() {
-        return SudMGP_APP_ID;
+        return appId;
     }
 
     /**
@@ -169,7 +169,7 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
      */
     @Override
     protected String getAppKey() {
-        return SudMGP_APP_KEY;
+        return appKey;
     }
 
     /**
@@ -230,7 +230,7 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
      */
     @Override
     protected boolean isTestEnv() {
-        return GAME_IS_TEST_ENV;
+        return isTestEnv;
     }
 
     /**

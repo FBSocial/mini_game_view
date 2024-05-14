@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mini_game_view/mini_game_controller.dart';
+import 'package:mini_game_view/mini_game_info.dart';
 import 'dart:async';
 
 import 'package:mini_game_view/mini_game_view.dart';
@@ -12,14 +14,12 @@ class GameViewArguments {
   final String roomId;
   final String gameId;
   final String userId;
-  final String loginCode;
 
   GameViewArguments({
     this.gameName = 'mini game',
     required this.roomId,
     required this.gameId,
     required this.userId,
-    required this.loginCode,
   });
 }
 
@@ -41,11 +41,46 @@ class _GameViewState extends State<GameView> {
     super.initState();
     arguments = Get.arguments as GameViewArguments;
     miniGameController = MiniGameController(
-      userId: arguments.userId,
-      gameId: arguments.gameId,
-      roomId: arguments.roomId,
-      loginCode: arguments.loginCode,
+      config: MiniGameConfig(
+        appId: '1461564080052506636',
+        appKey: '03pNxK2lEXsKiiwrBQ9GbH541Fk2Sfnc',
+        isTestEnv: true,
+      ),
+      info: MiniGameInfo(
+        userId: arguments.userId,
+        gameId: arguments.gameId,
+        roomId: arguments.roomId,
+      ),
+      position: MiniGameViewPosition(bottom: 150),
+      loginCodeCallback: getLoginCode,
     );
+  }
+
+  Future<String> getLoginCode() async {
+    String code = '';
+    try {
+      final dio = Dio();
+      dio.options.responseType = ResponseType.json;
+      final result =
+          await dio.post('https://mgp-hello.sudden.ltd/login/v3', data: {
+        'user_id': arguments.userId,
+      });
+      final data = result.data;
+      // {
+      //   ret_code: 0,
+      //   data: {
+      //      code: 0!@#$!eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIxNzE1NjY5ODQxNDMwIiwiZXhwIjoxNzE1NjczNDczLCJhcHBfaWQiOiIxNDYxNTY0MDgwMDUyNTA2NjM2In0.qqWDaQau6YTv27_I2tQwi5Qq6B9rPcPT-Yofw0bwOuY,
+      //      expire_date: 1715673473890,
+      //      avatar_url: https://dev-sud-static.sudden.ltd/avatar/13.jpg
+      //   }
+      // }
+      if (data is Map && data['data'] != null && data['data'] is Map) {
+        code = data['data']['code'];
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return code;
   }
 
   @override

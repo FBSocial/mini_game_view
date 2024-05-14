@@ -31,19 +31,13 @@ class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandle
 
     private final QuickStartGameViewModel gameViewModel = new QuickStartGameViewModel();
 
-    private String userId;
-
-    private String gameId;
-    private String roomId;
-
-    private String loginCode;
-
     MiniGameNativeView(Activity activity, FlutterPlugin.FlutterPluginBinding binding, @NonNull Context context, int id, @Nullable Map<String, Object> creationParams) {
         init(activity, context, binding);
         assert creationParams != null;
-        initArguments(creationParams);
         containerView.setBackgroundColor(Color.GREEN);
-        gameViewModel.initGame(mActivity, roomId, loginCode, Long.parseLong(gameId));
+        gameViewModel.destroyMG();
+        gameViewModel.initGameInfo(creationParams);
+        gameViewModel.initGameView(mActivity, creationParams);
         Log.d(TAG, "MiniGameNativeView: ");
     }
 
@@ -64,14 +58,6 @@ class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandle
                 }
             }
         });
-    }
-
-    private void initArguments(Map<String, Object> creationParams) {
-        userId = (String) creationParams.get("userId");
-        roomId = (String) creationParams.get("roomId");
-        gameId = (String) creationParams.get("gameId");
-        loginCode = (String) creationParams.get("loginCode");
-        gameViewModel.userId = userId;
     }
 
     @NonNull

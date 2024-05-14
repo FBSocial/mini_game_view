@@ -1,13 +1,18 @@
+import 'package:mini_game_view/mini_game_info.dart';
+
 class MiniGameController {
-  final String roomId;
-  final String gameId;
-  final String userId;
-  final String loginCode;
+  final MiniGameInfo info;
+
+  final MiniGameConfig config;
+
+  final MiniGameViewPosition? position;
+
+  final Future<String> Function() loginCodeCallback;
 
   MiniGameController({
-    required this.roomId,
-    required this.gameId,
-    required this.userId,
-    required this.loginCode,
+    required this.config,
+    required this.info,
+    required this.loginCodeCallback,
+    this.position,
   });
 }

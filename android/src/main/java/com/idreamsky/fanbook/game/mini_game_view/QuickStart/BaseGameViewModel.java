@@ -1,9 +1,11 @@
 package com.idreamsky.fanbook.game.mini_game_view.QuickStart;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
@@ -16,6 +18,8 @@ import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.model.GameConfigM
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.model.GameViewInfoModel;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.state.MGStateResponse;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.utils.SudJsonUtils;
+
+import java.util.Map;
 
 import tech.sud.mgp.core.ISudFSMStateHandle;
 import tech.sud.mgp.core.ISudFSTAPP;
@@ -35,18 +39,16 @@ import tech.sud.mgp.core.SudMGP;
  * 3. Call onDestroy() when the page is destroyed.
  */
 public abstract class BaseGameViewModel implements SudFSMMGListener {
-
-    /**
-     * 游戏房间id
-     * Game room ID
-     */
+    public String userId;
+    public String appId;
+    public String appKey;
+    public boolean isTestEnv;
     private String gameRoomId;
 
-    /**
-     * 当前使用的游戏id
-     * The currently used game ID
-     */
     private long playingGameId;
+
+    private final GameViewInfoModel.GameViewRectModel rectModel = new GameViewInfoModel.GameViewRectModel();
+
 
     /**
      * app调用sdk的封装类
@@ -73,6 +75,18 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
     public GameConfigModel gameConfigModel = new GameConfigModel();
     protected final Handler handler = new Handler(Looper.getMainLooper());
 
+    public void initGameInfo(Map<String, Object> creationParams) {
+        appId = (String) creationParams.get("appId");
+        appKey = (String) creationParams.get("appKey");
+        isTestEnv = creationParams.get("isTestEnv") == null || (Boolean) (creationParams.get("isTestEnv"));
+
+        userId = (String) creationParams.get("userId");
+        String gameIdString = (String) creationParams.get("gameId");
+        assert gameIdString != null;
+        playingGameId = Long.parseLong(gameIdString);
+        gameRoomId = (String) creationParams.get("roomId");
+    }
+
     /**
      * 外部调用切换游戏，传不同的gameId即可加载不同的游戏
      * gameId传0 等同于关闭游戏
@@ -80,25 +94,29 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
      * External call to switch games, pass a different gameId to load different games.
      * Passing 0 as gameId is equivalent to closing the game.
      *
-     * @param activity   游戏所在页面，用作于生命周期判断
-     *                   The page where the game is located, used for lifecycle judgment.
-     * @param gameRoomId 游戏房间id，房间隔离，同一房间才能一起游戏
-     *                   Game room ID, isolated by room, only players in the same room can play together.
-     * @param gameId     游戏id，传入不同的游戏id，即可加载不同的游戏，传0等同于关闭游戏
-     *                   Game ID, passing a different gameId will load a different game. Passing 0 is equivalent to closing the game.
+     * @param activity 游戏所在页面，用作于生命周期判断
+     *                 The page where the game is located, used for lifecycle judgment.
      */
-    public void initGame(Activity activity, String gameRoomId, String loginCode, long gameId) {
+    public void initGameView(Activity activity, Map<String, Object> creationParams) {
         if (TextUtils.isEmpty(gameRoomId)) {
             Toast.makeText(activity, "gameRoomId can not be empty", Toast.LENGTH_LONG).show();
             return;
         }
-        if (playingGameId == gameId && gameRoomId.equals(this.gameRoomId)) {
-            return;
-        }
-        destroyMG();
-        this.gameRoomId = gameRoomId;
-        playingGameId = gameId;
-        login(activity, loginCode, gameId);
+        int topDp = creationParams.get("top") == null ? 0 : (int) (creationParams.get("top"));
+        int leftDp = creationParams.get("left") == null ? 0 : (int) (creationParams.get("left"));
+        int rightDp = creationParams.get("right") == null ? 0 : (int) (creationParams.get("right"));
+        int bottomDp = creationParams.get("bottom") == null ? 0 : (int) (creationParams.get("bottom"));
+        rectModel.top = dpToPx(activity, topDp);
+        rectModel.left = dpToPx(activity, leftDp);
+        rectModel.right = dpToPx(activity, rightDp);
+        rectModel.bottom = dpToPx(activity, bottomDp);
+
+        login(activity);
+    }
+
+    private int dpToPx(Context context, float dp) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
     /**
@@ -112,31 +130,26 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
      *
      * @param activity 游戏所在页面
      *                 The page where the game is located.
-     * @param gameId   游戏id
-     *                 Game ID.
      */
-    private void login(Activity activity, String loginCode, long gameId) {
-        if (activity.isDestroyed() || gameId <= 0) {
+    private void login(Activity activity) {
+        if (activity.isDestroyed() || playingGameId <= 0) {
             return;
         }
-        initSdk(activity, gameId, loginCode);
+//        initSdk(activity, loginCode);
 
-//        // 请求登录code
-//        // Request login code
-//        getCode(activity, getUserId(), getAppId(), new GameGetCodeListener() {
-//            @Override
-//            public void onSuccess(String code) {
-//                if (gameId != playingGameId) {
-//                    return;
-//                }
-//                initSdk(activity, gameId, code);
-//            }
-//
-//            @Override
-//            public void onFailed() {
-//                delayLoadGame(activity, gameId);
-//            }
-//        });
+        // 请求登录code
+        // Request login code
+        getCode(activity, getUserId(), getAppId(), new GameGetCodeListener() {
+            @Override
+            public void onSuccess(String code) {
+                initSdk(activity, code);
+            }
+
+            @Override
+            public void onFailed() {
+                delayLoadGame(activity);
+            }
+        });
     }
 
     /**
@@ -146,14 +159,10 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
      *
      * @param activity 游戏所在页面
      *                 The page where the game is located.
-     * @param gameId   游戏id
-     *                 Game ID.
      * @param code     令牌
      *                 Token.
      */
-    private void initSdk(Activity activity, long gameId, String code) {
-        String appId = getAppId();
-        String appKey = getAppKey();
+    private void initSdk(Activity activity, String code) {
         // 初始化sdk
         // Initialize the SDK
         SudInitSDKParamModel params = new SudInitSDKParamModel();
@@ -165,7 +174,7 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
         SudMGP.initSDK(params, new ISudListenerInitSDK() {
             @Override
             public void onSuccess() {
-                loadGame(activity, code, gameId);
+                loadGame(activity, code);
             }
 
             @Override
@@ -176,7 +185,7 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
                     Toast.makeText(activity, "initSDK onFailure:" + errMsg + "(" + errCode + ")", Toast.LENGTH_LONG).show();
                 }
 
-                delayLoadGame(activity, code, gameId);
+                delayLoadGame(activity);
             }
         });
     }
@@ -196,11 +205,9 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
      *                 The page where the game is located.
      * @param code     登录令牌
      *                 Login token.
-     * @param gameId   游戏id
-     *                 Game ID.
      */
-    private void loadGame(Activity activity, String code, long gameId) {
-        if (activity.isDestroyed() || gameId != playingGameId) {
+    private void loadGame(Activity activity, String code) {
+        if (activity.isDestroyed()) {
             return;
         }
 
@@ -210,13 +217,13 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
 
         // 调用游戏sdk加载游戏
         // Invoke the game SDK to load the game.
-        ISudFSTAPP iSudFSTAPP = SudMGP.loadMG(activity, getUserId(), gameRoomId, code, gameId, getLanguageCode(), sudFSMMGDecorator);
+        ISudFSTAPP iSudFSTAPP = SudMGP.loadMG(activity, getUserId(), gameRoomId, code, playingGameId, getLanguageCode(), sudFSMMGDecorator);
 
         // 如果返回空，则代表参数问题或者非主线程
         // If null is returned, it indicates a parameter issue or a non-main thread.
         if (iSudFSTAPP == null) {
             Toast.makeText(activity, "loadMG params error", Toast.LENGTH_LONG).show();
-            delayLoadGame(activity, code, gameId);
+            delayLoadGame(activity);
             return;
         }
 
@@ -239,14 +246,12 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
      *
      * @param activity 游戏所在页面
      *                 The page where the game is located.
-     * @param gameId   游戏id
-     *                 Game ID.
      */
-    private void delayLoadGame(Activity activity, String loginCode, long gameId) {
+    private void delayLoadGame(Activity activity) {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                login(activity, loginCode, gameId);
+                login(activity);
             }
         }, 5000);
     }
@@ -500,6 +505,7 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
         // Game view size
         gameViewInfoModel.view_size.width = gameViewWidth;
         gameViewInfoModel.view_size.height = gameViewHeight;
+        gameViewInfoModel.view_game_rect = rectModel;
 
         // 游戏安全操作区域
         // Game secure operation area
