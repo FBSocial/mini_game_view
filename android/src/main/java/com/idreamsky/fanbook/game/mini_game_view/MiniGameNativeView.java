@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 
 import com.idreamsky.fanbook.game.mini_game_view.QuickStart.GameViewChangeListener;
 import com.idreamsky.fanbook.game.mini_game_view.QuickStart.QuickStartGameViewModel;
-import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.decorator.SudFSMMGDecorator;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
@@ -30,16 +29,12 @@ class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandle
 
     private MethodChannel mMethodChannel;
 
-    private int count = 0;
-    private final SudFSMMGDecorator sudFSMMGDecorator = new SudFSMMGDecorator();
     private final QuickStartGameViewModel gameViewModel = new QuickStartGameViewModel();
 
     private String userId;
 
     private String gameId;
     private String roomId;
-
-    private View mGameView;
 
     MiniGameNativeView(Activity activity, FlutterPlugin.FlutterPluginBinding binding, @NonNull Context context, int id, @Nullable Map<String, Object> creationParams) {
         init(activity, context, binding);
@@ -98,6 +93,7 @@ class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandle
     public void dispose() {
         mMethodChannel.setMethodCallHandler(null);
         gameViewModel.setGameViewChangeListener(null);
+        gameViewModel.destroyMG();
     }
 
     @Override

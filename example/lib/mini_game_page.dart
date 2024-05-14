@@ -48,20 +48,10 @@ class _GameViewState extends State<GameView> {
       backgroundColor: Colors.red,
       body: Stack(
         children: [
-          Column(
-            children: [
-              Expanded(
-                child: MiniGameView(
-                  roomId: arguments.roomId,
-                  gameId: arguments.gameId,
-                  userId: arguments.userId,
-                ),
-              ),
-              const SizedBox(
-                height: 300,
-                child: Center(child: Text('Flutter Placeholder View')),
-              ),
-            ],
+          MiniGameView(
+            roomId: arguments.roomId,
+            gameId: arguments.gameId,
+            userId: arguments.userId,
           ),
           Positioned(
             bottom: 0,
@@ -70,23 +60,40 @@ class _GameViewState extends State<GameView> {
             child: Visibility(
               visible: showMessage,
               child: Container(
-                color: Colors.grey.withOpacity(.5),
+                color: Colors.grey.withOpacity(.2),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(
-                      height: 300 - 52,
+                      height: 150 - 48,
                       child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
                         itemCount: 100,
                         itemBuilder: (_, index) {
-                          return ListTile(
-                              title: Text('听说这个游戏很好玩，是不是啊， ${index + 1}'));
+                          return SizedBox(
+                            height: 24,
+                            child: Row(
+                              children: [
+                                const SizedBox(width: 16),
+                                Text(
+                                  '玩家${index + 1}:',
+                                  style: const TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text('听说这个游戏很好玩，是不是啊， ${index + 1}'),
+                                ),
+                              ],
+                            ),
+                          );
                         },
                       ),
                     ),
                     Container(
-                      color: Colors.white,
-                      height: 52,
+                      color: Colors.grey.withOpacity(.3),
+                      height: 48,
                       padding: const EdgeInsets.only(left: 16),
                       child: TextField(
                         focusNode: focusNode,
@@ -108,10 +115,10 @@ class _GameViewState extends State<GameView> {
             onPressed: updateMessageShowStatus,
             child: const Text('弹幕'),
           ),
-          FloatingActionButton(
-            onPressed: loadingGame,
-            child: const Text('加载'),
-          ),
+          // FloatingActionButton(
+          //   onPressed: loadingGame,
+          //   child: const Text('加载'),
+          // ),
         ],
       ),
     );

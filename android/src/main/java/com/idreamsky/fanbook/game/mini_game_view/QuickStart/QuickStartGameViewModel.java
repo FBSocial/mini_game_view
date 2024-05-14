@@ -3,8 +3,6 @@ package com.idreamsky.fanbook.game.mini_game_view.QuickStart;
 import android.app.Activity;
 import android.view.View;
 
-import androidx.lifecycle.MutableLiveData;
-
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.model.GameConfigModel;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.model.GameViewInfoModel;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.state.MGStateResponse;
