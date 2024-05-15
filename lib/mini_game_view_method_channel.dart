@@ -1,23 +1,20 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'mini_game_view_platform_interface.dart';
+class MiniGameViewChannel extends PlatformInterface {
+  MiniGameViewChannel() : super(token: _token);
 
-/// An implementation of [MiniGameViewPlatform] that uses method channels.
-class MethodChannelMiniGameView extends MiniGameViewPlatform {
-  /// The method channel used to interact with the native platform.
-  @visibleForTesting
-  final methodChannel = const MethodChannel('mini_game_view');
+  static final Object _token = Object();
 
-  @override
-  Future<String?> getPlatformVersion() async {
-    final version =
-        await methodChannel.invokeMethod<String>('getPlatformVersion');
-    return version;
+  static MiniGameViewChannel _instance = MiniGameViewChannel();
+
+  static MiniGameViewChannel get instance => _instance;
+
+  static set instance(MiniGameViewChannel instance) {
+    PlatformInterface.verifyToken(instance, _token);
+    _instance = instance;
   }
 
-  @override
-  Future<void> loadGameView() async {
-    await methodChannel.invokeMethod('loadGameView');
-  }
+  final methodChannel = const MethodChannel('mini_game_view/method');
+  final eventChannel = const EventChannel('mini_game_view/event');
 }

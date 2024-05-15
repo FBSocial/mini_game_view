@@ -6,7 +6,6 @@ import 'package:mini_game_view/mini_game_info.dart';
 import 'dart:async';
 
 import 'package:mini_game_view/mini_game_view.dart';
-import 'package:mini_game_view/mini_game_view_platform_interface.dart';
 import 'package:mini_game_view_example/keyboard_container.dart';
 
 class GameViewArguments {
@@ -54,6 +53,12 @@ class _GameViewState extends State<GameView> {
       position: MiniGameViewPosition(bottom: 150),
       loginCodeCallback: getLoginCode,
     );
+  }
+
+  @override
+  void dispose() {
+    miniGameController.dispose();
+    super.dispose();
   }
 
   Future<String> getLoginCode() async {
@@ -156,10 +161,6 @@ class _GameViewState extends State<GameView> {
             onPressed: updateMessageShowStatus,
             child: const Text('弹幕'),
           ),
-          // FloatingActionButton(
-          //   onPressed: loadingGame,
-          //   child: const Text('加载'),
-          // ),
         ],
       ),
     );
@@ -169,9 +170,5 @@ class _GameViewState extends State<GameView> {
     setState(() {
       showMessage = !showMessage;
     });
-  }
-
-  Future<void> loadingGame() async {
-    MiniGameViewPlatform.instance.loadGameView();
   }
 }

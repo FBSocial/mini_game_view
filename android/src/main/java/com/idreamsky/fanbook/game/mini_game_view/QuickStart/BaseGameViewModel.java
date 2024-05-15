@@ -6,10 +6,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
+import com.idreamsky.fanbook.game.mini_game_view.MiniGameEvent;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.decorator.SudFSMMGCache;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.decorator.SudFSMMGDecorator;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.decorator.SudFSMMGListener;
@@ -39,6 +41,7 @@ import tech.sud.mgp.core.SudMGP;
  * 3. Call onDestroy() when the page is destroyed.
  */
 public abstract class BaseGameViewModel implements SudFSMMGListener {
+    private static final String TAG = "BaseGameViewModel";
     public String userId;
     public String appId;
     public String appKey;
@@ -74,6 +77,7 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
      */
     public GameConfigModel gameConfigModel = new GameConfigModel();
     protected final Handler handler = new Handler(Looper.getMainLooper());
+    private ISudFSMStateHandle iSudFSMStateHandle;
 
     public void initGameInfo(Map<String, Object> creationParams) {
         appId = (String) creationParams.get("appId");
@@ -110,8 +114,6 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
         rectModel.left = dpToPx(activity, leftDp);
         rectModel.right = dpToPx(activity, rightDp);
         rectModel.bottom = dpToPx(activity, bottomDp);
-
-        login(activity);
     }
 
     private int dpToPx(Context context, float dp) {
@@ -131,25 +133,11 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
      * @param activity 游戏所在页面
      *                 The page where the game is located.
      */
-    private void login(Activity activity) {
+    public void login(Activity activity, String loginCode) {
         if (activity.isDestroyed() || playingGameId <= 0) {
             return;
         }
-//        initSdk(activity, loginCode);
-
-        // 请求登录code
-        // Request login code
-        getCode(activity, getUserId(), getAppId(), new GameGetCodeListener() {
-            @Override
-            public void onSuccess(String code) {
-                initSdk(activity, code);
-            }
-
-            @Override
-            public void onFailed() {
-                delayLoadGame(activity);
-            }
-        });
+        initSdk(activity, loginCode);
     }
 
     /**
@@ -163,8 +151,6 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
      *                 Token.
      */
     private void initSdk(Activity activity, String code) {
-        // 初始化sdk
-        // Initialize the SDK
         SudInitSDKParamModel params = new SudInitSDKParamModel();
         params.context = activity;
         params.appId = appId;
@@ -179,13 +165,9 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
 
             @Override
             public void onFailure(int errCode, String errMsg) {
-                // TODO: 2022/6/13 下面toast可以根据业务需要决定是否保留
-                // TODO: 2022/6/13 The following toast can be kept or removed based on business needs.
                 if (isTestEnv()) {
-                    Toast.makeText(activity, "initSDK onFailure:" + errMsg + "(" + errCode + ")", Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "initSDK onFailure:" + errMsg + "(" + errCode + ")");
                 }
-
-                delayLoadGame(activity);
             }
         });
     }
@@ -223,7 +205,6 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
         // If null is returned, it indicates a parameter issue or a non-main thread.
         if (iSudFSTAPP == null) {
             Toast.makeText(activity, "loadMG params error", Toast.LENGTH_LONG).show();
-            delayLoadGame(activity);
             return;
         }
 
@@ -237,23 +218,6 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
         // Activity invocation：gameContainer.addView(view, FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         gameView = iSudFSTAPP.getGameView();
         onAddGameView(gameView);
-    }
-
-    /**
-     * 游戏加载失败的时候，延迟一会再重新加载
-     * <p>
-     * When the game fails to load, delay for a while and then reload.
-     *
-     * @param activity 游戏所在页面
-     *                 The page where the game is located.
-     */
-    private void delayLoadGame(Activity activity) {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                login(activity);
-            }
-        }, 5000);
     }
 
     /**
@@ -405,7 +369,22 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
      */
     @Override
     public void onExpireCode(ISudFSMStateHandle handle, String dataJson) {
-        processOnExpireCode(sudFSTAPPDecorator, handle);
+        MiniGameEvent.onExpireCode();
+        iSudFSMStateHandle = handle;
+//        processOnExpireCode(sudFSTAPPDecorator, handle);
+    }
+
+    public void updateCode(String code) {
+        if (playingGameId <= 0 || iSudFSMStateHandle == null) return;
+        MGStateResponse mgStateResponse = new MGStateResponse();
+        if (code.isEmpty()) {
+            mgStateResponse.ret_code = -1;
+            iSudFSMStateHandle.failure(SudJsonUtils.toJson(mgStateResponse));
+        } else {
+            mgStateResponse.ret_code = MGStateResponse.SUCCESS;
+            sudFSTAPPDecorator.updateCode(code, null);
+            iSudFSMStateHandle.success(SudJsonUtils.toJson(mgStateResponse));
+        }
     }
 
     /**

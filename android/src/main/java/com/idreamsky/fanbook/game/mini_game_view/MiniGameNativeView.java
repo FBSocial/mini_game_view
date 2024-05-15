@@ -14,10 +14,13 @@ import com.idreamsky.fanbook.game.mini_game_view.QuickStart.GameViewChangeListen
 import com.idreamsky.fanbook.game.mini_game_view.QuickStart.QuickStartGameViewModel;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.plugin.common.BasicMessageChannel;
+import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.platform.PlatformView;
 
+import java.util.HashMap;
 import java.util.Map;
 
 class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandler {
@@ -26,8 +29,6 @@ class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandle
     private FrameLayout containerView = null;
     private Context mContext;
     private Activity mActivity;
-
-    private MethodChannel mMethodChannel;
 
     private final QuickStartGameViewModel gameViewModel = new QuickStartGameViewModel();
 
@@ -38,16 +39,15 @@ class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandle
         gameViewModel.destroyMG();
         gameViewModel.initGameInfo(creationParams);
         gameViewModel.initGameView(mActivity, creationParams);
-        Log.d(TAG, "MiniGameNativeView: ");
+        onGameContainerCreated();
     }
 
     void init(Activity activity, Context context, FlutterPlugin.FlutterPluginBinding binding) {
         mActivity = activity;
         mContext = context;
-        mMethodChannel = new MethodChannel(binding.getBinaryMessenger(), "mini_game_view");
-        mMethodChannel.setMethodCallHandler(this);
+
         containerView = new FrameLayout(context);
-        containerView.setLayoutParams(new FrameLayout.LayoutParams(200, 100));
+        containerView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
         gameViewModel.setGameViewChangeListener(new GameViewChangeListener() {
             @Override
             public void onChanged(View view) {
@@ -58,6 +58,7 @@ class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandle
                 }
             }
         });
+        MiniGameViewPlugin.methodChannel.setMethodCallHandler(this);
     }
 
     @NonNull
@@ -69,25 +70,33 @@ class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandle
     @Override
     public void onFlutterViewAttached(@NonNull View flutterView) {
         PlatformView.super.onFlutterViewAttached(flutterView);
-        Log.d(TAG, "onFlutterViewAttached: ");
     }
 
     @Override
     public void onFlutterViewDetached() {
+        gameViewModel.destroyMG();
         PlatformView.super.onFlutterViewDetached();
-        Log.d(TAG, "onFlutterViewAttached: ");
     }
 
     @Override
     public void dispose() {
-        mMethodChannel.setMethodCallHandler(null);
         gameViewModel.setGameViewChangeListener(null);
-        gameViewModel.destroyMG();
+        MiniGameViewPlugin.methodChannel.setMethodCallHandler(null);
+    }
+
+    private void onGameContainerCreated() {
+        MiniGameEvent.onGameContainerCreated();
     }
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-        if (call.method.equals("loadGameView")) {
+        if (call.method.equals("loginGame")) {
+            String loginCode = (String) call.arguments;
+            gameViewModel.login(mActivity, loginCode);
+            result.success(true);
+        } else if (call.method.equals("updateCode")) {
+            String loginCode = (String) call.arguments;
+            gameViewModel.updateCode(loginCode);
             result.success(true);
         } else {
             result.notImplemented();
