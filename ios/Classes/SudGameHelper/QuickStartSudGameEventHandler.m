@@ -46,17 +46,21 @@
     // Game content layout security area, adjust the top spacing according to their own business
     // 顶部间距
     // top spacing
-    m.view_game_rect.top = (statusBarHeight + 80);
+    m.view_game_rect.top = (statusBarHeight + self.top);
     // 左边
     // Left
-    m.view_game_rect.left = 0;
+    m.view_game_rect.left = self.left;
     // 右边
     // Right
-    m.view_game_rect.right = 0;
+    m.view_game_rect.right = self.right;
     // 底部安全区域
     // Bottom safe area
-    m.view_game_rect.bottom = (safeArea.bottom + 100);
+    m.view_game_rect.bottom = (safeArea.bottom + self.bottom);
     return m;
+}
+
+- (void)onExpireCode:(nonnull id<ISudFSMStateHandle>)handle dataJson:(nonnull NSString *)dataJson {
+    [self.delegate onExpireCode];
 }
 
 - (void)onGetCode:(NSString *)userId result:(void (^)(NSString * _Nonnull))result {

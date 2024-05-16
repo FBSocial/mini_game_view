@@ -29,14 +29,10 @@
     [self.sudGameEventHandler.sudFSMMGDecorator setEventListener:eventHandler];
 }
 
-- (void)loadGame:(nonnull SudGameLoadConfigModel *)configModel {
+- (void)loadGame:(nonnull SudGameLoadConfigModel *)configModel code:(NSString * )code {
     NSAssert(self.sudGameEventHandler, @"Must registerGameEventHandler before!");
     if (self.sudGameEventHandler) {
-        __weak typeof(self) weakSelf = self;
-        [self.sudGameEventHandler onGetCode:configModel.userId result:^(NSString * _Nonnull code) {
-            NSLog(@"on getCode success");
-            [weakSelf initSudMGPSDK:configModel code:code];
-        }];
+        [self initSudMGPSDK:configModel code:code];
     }
 }
 
@@ -78,7 +74,6 @@
 /// 加载游戏MG
 /// Initialize the SudMDP SDK for the game
 /// @param configModel 配置model
-/// @param configModel cofnig model
 - (void)loadMG:(SudGameLoadConfigModel *)configModel code:(NSString *)code {
     NSAssert(self.sudGameEventHandler, @"Must registerGameEventHandler before!");
     [self.sudGameEventHandler setupLoadConfigModel:configModel];
