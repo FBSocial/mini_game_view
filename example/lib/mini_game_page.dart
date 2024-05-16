@@ -161,6 +161,10 @@ class _GameViewState extends State<GameView> {
             onPressed: updateMessageShowStatus,
             child: const Text('弹幕'),
           ),
+          FloatingActionButton(
+            onPressed: openDirectMessagePage,
+            child: const Text('私信'),
+          ),
         ],
       ),
     );
@@ -170,5 +174,25 @@ class _GameViewState extends State<GameView> {
     setState(() {
       showMessage = !showMessage;
     });
+  }
+
+  void openDirectMessagePage() {
+    Get.to(
+      () => const DirectMessagePage(),
+    );
+  }
+}
+
+class DirectMessagePage extends StatelessWidget {
+  const DirectMessagePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('私信页面'),
+      ),
+      body: const Center(child: Text('私信页面')),
+    );
   }
 }
