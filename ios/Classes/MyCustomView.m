@@ -166,7 +166,7 @@
     // Current user id
     sudGameConfigModel.userId = self.userId;
 
-    [self.sudGameManager loadMG:sudGameConfigModel code:self.loginCode];
+    [self.sudGameManager loadGame:sudGameConfigModel code:self.loginCode];
 }
 
 /// 销毁游戏
