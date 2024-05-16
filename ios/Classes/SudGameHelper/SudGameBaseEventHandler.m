@@ -113,13 +113,6 @@
 
 - (void)onExpireCode:(nonnull id<ISudFSMStateHandle>)handle dataJson:(nonnull NSString *)dataJson {
     
-    // 请求业务服务器刷新令牌 Code更新
-    // Request the service server to refresh the token Code update
-    [self onGetCode:self.loadConfigModel.userId result:^(NSString * _Nonnull code) {
-        // 调用游戏接口更新令牌
-        // Call game interface update token
-        [self.sudFSTAPPDecorator updateCode:code];
-    }];
 }
 
 /// 游戏开始

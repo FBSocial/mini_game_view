@@ -9,6 +9,7 @@
 #import "SudGameManager.h"
 #import "QuickStartSudGameEventHandler.h"
 #import <Masonry/Masonry.h>
+#import "MyEventSink.h"
 
 
 // TODO: 替换由SudMGP提供的appId 及 appKey
@@ -23,7 +24,7 @@
 #define SUD_GAME_TEST_ENV    NO
 #endif
 
-@interface MyCustomView ()
+@interface MyCustomView () <QuickStartSudGameEventHandlerDelegate>
 
 @property(nonatomic, strong) UIView *gameView;
 /// SUD 游戏管理模块
@@ -37,14 +38,18 @@
 
 @property(nonatomic, strong)NSString *roomId;
 
+@property(nonatomic, strong)NSString *loginCode;
+
+@property(nonatomic, strong)NSString *appKey;
+
+@property(nonatomic, strong)NSString *appId;
+
+@property(nonatomic, assign)bool isTest;
+
 @end
 
 
-@implementation MyCustomView {
-  int64_t _viewId;
-  FlutterMethodChannel* _methodChannel;
-    
-}
+@implementation MyCustomView {}
 
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -53,12 +58,16 @@
               binaryMessenger:(NSObject<FlutterBinaryMessenger>*)messenger {
   self = [super initWithFrame:frame];
   if (self) {
-    _viewId = viewId;
       self.gameId = args[@"gameId"];
       self.userId = args[@"userId"];
       self.roomId = args[@"roomId"];
-    NSString* channelName = [NSString stringWithFormat:@"my_custom_view_%" PRId64, viewId];
-    _methodChannel = [FlutterMethodChannel methodChannelWithName:channelName binaryMessenger:messenger];
+      self.appKey = args[@"appKey"];
+      self.appId = args[@"appId"];
+      self.isTest = [args[@"isTestEnv"] boolValue];
+      NSInteger top = [args[@"top"] intValue];
+      NSInteger left = [args[@"left"] intValue];
+      NSInteger right = [args[@"right"] intValue];
+      NSInteger bottom = [args[@"bottom"] intValue];
       [self addSubview:self.gameView];
       /// 1. step
       [self.gameView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -71,21 +80,25 @@
       // 创建游戏事件处理对象实例
       // Create an instance of the game event handler object
       self.gameEventHandler = QuickStartSudGameEventHandler.new;
+      
+      self.gameEventHandler.top = top;
+      self.gameEventHandler.left = left;
+      self.gameEventHandler.right = right;
+      self.gameEventHandler.bottom = bottom;
+      
+      self.gameEventHandler.delegate = self;
       // 将游戏事件处理对象实例注册进游戏管理对象实例中
       // Register the game event processing object instance into the game management object instance
       [self.sudGameManager registerGameEventHandler:self.gameEventHandler];
-      /// 2. step
-      // 加载游戏
-      // Load the game
-      if (self.gameId != nil) {
-          [self loadGame:[self.gameId integerValue]];
-      }
       
-      UIButton * button = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 40, 40)];
-      button.backgroundColor = [UIColor redColor];
-      [button setTitle:@"准备" forState:UIControlStateNormal];
-      [button addTarget:self action:@selector(actionButton) forControlEvents:UIControlEventTouchUpInside];
-      [self addSubview:button];
+      FlutterMethodChannel* methodChannel = [FlutterMethodChannel methodChannelWithName:@"mini_game_view/method" binaryMessenger:messenger];
+      
+      [methodChannel setMethodCallHandler:^(FlutterMethodCall* call, FlutterResult result) {
+           [self handleMethodCall:call result:result];
+         }];
+      
+      NSDictionary *data = @{@"action": @"onGameContainerCreated",};
+      [self sendMapDataToFlutter:data];
   }
   return self;
 }
@@ -102,6 +115,26 @@
 }
 
 
+- (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
+  if ([call.method isEqualToString:@"loginGame"]) {
+      //加载游戏
+      if ([call.arguments isKindOfClass:[NSString class]] ) {
+          self.loginCode = call.arguments;
+          [self loadGame:[self.gameId integerValue]];
+      }
+    result(nil);
+  } else if ([call.method isEqualToString:@"updateCode"]) {
+      //重置code
+      if ([call.arguments isKindOfClass:[NSString class]] ) {
+          self.loginCode = call.arguments;
+          [self.gameEventHandler.sudFSTAPPDecorator updateCode:self.loginCode];
+      }
+    result(nil);
+  } else {
+    result(FlutterMethodNotImplemented);
+  }
+}
+
 /// 加载游戏
 /// Load game
 - (void)loadGame:(int64_t)gameId {
@@ -110,13 +143,13 @@
     SudGameLoadConfigModel *sudGameConfigModel = [[SudGameLoadConfigModel alloc] init];
     // 申请的应用ID
     // Application ID
-    sudGameConfigModel.appId = SUDMGP_APP_ID;
+    sudGameConfigModel.appId = self.appId;
     // 申请的应用key
     // Application key
-    sudGameConfigModel.appKey = SUDMGP_APP_KEY;
+    sudGameConfigModel.appKey = self.appKey;
     // 是否测试环境，测试时为YES, 发布上线设置为NO
     // Set to YES during the test and NO when publishing online
-    sudGameConfigModel.isTestEnv = SUD_GAME_TEST_ENV;
+    sudGameConfigModel.isTestEnv = self.isTest;
     // 待加载游戏ID
     // ID of the game to be loaded
     sudGameConfigModel.gameId = gameId;
@@ -133,7 +166,7 @@
     // Current user id
     sudGameConfigModel.userId = self.userId;
 
-    [self.sudGameManager loadGame:sudGameConfigModel];
+    [self.sudGameManager loadMG:sudGameConfigModel code:self.loginCode];
 }
 
 /// 销毁游戏
@@ -144,6 +177,15 @@
 
 - (UIView*)view {
   return self;
+}
+
+- (void)sendMapDataToFlutter: (NSDictionary *)data {
+    [[MyEventSink sharedInstance] sendDataToFlutter:data];
+}
+
+- (void)onExpireCode {
+    NSDictionary *data = @{@"action": @"onExpireCode",};
+    [self sendMapDataToFlutter:data];
 }
 
 @end

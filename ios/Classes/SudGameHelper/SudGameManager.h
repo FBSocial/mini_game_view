@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// SUD 游戏管理模块
 @interface SudGameManager : NSObject
 
+
 /// 一：注册游戏事件监听
 /// - Parameter eventHandler: eventHandler 游戏事件监听对象，所有游戏与app交互事件从这里回调给listener，备注：内部不强制引用，外部必须强持有该handler
 /// Register a game event handler to listen for game events.
@@ -34,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 1. Request the business service API to obtain the code required for initializing the game SDK (getCode).
 /// 2. Initialize the SudMGP SDK using the initSDK method.
 /// 3. Load the SudMGP SDK using the loadMG method.
-- (void)loadGame:(SudGameLoadConfigModel *)configModel;
+- (void)loadMG:(SudGameLoadConfigModel *)configModel code:(NSString *)code;
 
 /// 三：销毁游戏 销毁SudMGP SDK
 /// Step 3: Game Logout
