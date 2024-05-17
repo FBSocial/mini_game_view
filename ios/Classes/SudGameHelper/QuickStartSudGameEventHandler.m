@@ -7,6 +7,7 @@
 //
 
 #import "QuickStartSudGameEventHandler.h"
+#import "MyEventSink.h"
 
 
 @implementation QuickStartSudGameEventHandler
@@ -19,6 +20,8 @@
     gameCfgModel.gameSoundVolume = 100;
     gameCfgModel.ui.lobby_players.hide = YES;
     gameCfgModel.ui.level.hide = YES;
+    gameCfgModel.ui.game_settle_again_btn.custom = YES;
+    gameCfgModel.ui.game_settle_close_btn.custom = YES;
     /// ...
     return gameCfgModel;
 }
@@ -180,6 +183,12 @@
 
 /// Game: Settlement interface again to a button click status MG_COMMON_SELF_CLICK_GAME_SETTLE_AGAIN_BTN
 - (void)onGameMGCommonSelfClickGameSettleAgainBtn:(nonnull id <ISudFSMStateHandle>)handle model:(MGCommonSelfClickGameSettleAgainBtn *)model {
+    [[MyEventSink sharedInstance] sendDataToFlutter:@{@"action":@"onGameSettleAgain"}];
+    [handle success:[self.sudFSMMGDecorator handleMGSuccess]];
+}
+
+- (void)onGameMGCommonSelfClickGameSettleCloseBtn:(nonnull id <ISudFSMStateHandle>)handle model:(MGCommonSelfClickGameSettleCloseBtn *)model {
+    [[MyEventSink sharedInstance] sendDataToFlutter:@{@"action":@"onGameSettleClose"}];
     [handle success:[self.sudFSMMGDecorator handleMGSuccess]];
 }
 
@@ -235,7 +244,7 @@
 
 /// 玩家: 队长状态  MG_COMMON_PLAYER_CAPTAIN
 /// Player: Captain status MG_COMMON_PLAYER_CAPTAIN
-- (void)onPlayerMGCommonPlayerCaptain:(id <ISudFSMStateHandle>)handle userId:(NSString *)userId model:(MGCommonPlayerCaptainModel *)model {
+- (void)onPlayerMGCommonPlayerCaptain:(id <ISudFSMStateHandle>)handle userId:(NSString *)userId model:(MGCommonPlayerCaptainModel *)model { 
 
     [handle success:[self.sudFSMMGDecorator handleMGSuccess]];
 }
