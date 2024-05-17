@@ -35,10 +35,8 @@ class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandle
     MiniGameNativeView(Activity activity, FlutterPlugin.FlutterPluginBinding binding, @NonNull Context context, int id, @Nullable Map<String, Object> creationParams) {
         init(activity, context, binding);
         assert creationParams != null;
-        containerView.setBackgroundColor(Color.GREEN);
         gameViewModel.destroyMG();
-        gameViewModel.initGameInfo(creationParams);
-        gameViewModel.initGameView(mActivity, creationParams);
+        gameViewModel.initGame(mActivity, creationParams);
         onGameContainerCreated();
     }
 

@@ -7,6 +7,8 @@ import 'package:mini_game_view/mini_game_view_method_channel.dart';
 
 const _onGameContainerCreatedAction = 'onGameContainerCreated';
 const _onExpireCodeAction = 'onExpireCode';
+const _onGameSettleCloseAction = 'onGameSettleClose';
+const _onGameSettleAgainAction = 'onGameSettleAgain';
 
 class MiniGameController {
   final MiniGameInfo info;
@@ -15,7 +17,9 @@ class MiniGameController {
 
   final MiniGameViewPosition? position;
 
-  final Future<String> Function() loginCodeCallback;
+  final Future<String> Function() onGameLoginCode;
+  final Function()? onGameSettleAgain;
+  final Function()? onGameSettleClose;
 
   late StreamSubscription _subscription;
   late MethodChannel _methodChannel;
@@ -23,7 +27,9 @@ class MiniGameController {
   MiniGameController({
     required this.config,
     required this.info,
-    required this.loginCodeCallback,
+    required this.onGameLoginCode,
+    this.onGameSettleClose,
+    this.onGameSettleAgain,
     this.position,
   }) {
     _methodChannel = MiniGameViewChannel.instance.methodChannel;
@@ -41,6 +47,10 @@ class MiniGameController {
       _onGameContainerCreated();
     } else if (action == _onExpireCodeAction) {
       _onExpireCode();
+    } else if (action == _onGameSettleCloseAction) {
+      _onGameSettleClose();
+    } else if (action == _onGameSettleAgainAction) {
+      _onGameSettleAgain();
     }
   }
 
@@ -48,7 +58,7 @@ class MiniGameController {
   /// 成功获取后立即开始加载游戏
   Future<void> _onGameContainerCreated() async {
     try {
-      final loginCode = await loginCodeCallback.call();
+      final loginCode = await onGameLoginCode.call();
       if (loginCode.isEmpty) return;
       await _methodChannel.invokeMethod('loginGame', loginCode);
     } catch (e) {
@@ -59,11 +69,19 @@ class MiniGameController {
   /// 处理游戏code过期
   Future<void> _onExpireCode() async {
     try {
-      final loginCode = await loginCodeCallback.call();
+      final loginCode = await onGameLoginCode.call();
       await _methodChannel.invokeMethod('updateCode', loginCode);
     } catch (e) {
       debugPrint('_onGameContainerCreated, ${e.toString()}');
     }
+  }
+
+  void _onGameSettleClose() {
+    onGameSettleClose?.call();
+  }
+
+  void _onGameSettleAgain() {
+    onGameSettleAgain?.call();
   }
 
   void dispose() {

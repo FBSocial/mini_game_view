@@ -51,7 +51,7 @@ class _GameViewState extends State<GameView> {
         roomId: arguments.roomId,
       ),
       position: MiniGameViewPosition(bottom: 150),
-      loginCodeCallback: getLoginCode,
+      onGameLoginCode: getLoginCode,
     );
   }
 

@@ -3,6 +3,7 @@ package com.idreamsky.fanbook.game.mini_game_view.QuickStart;
 import android.app.Activity;
 import android.view.View;
 
+import com.idreamsky.fanbook.game.mini_game_view.MiniGameEvent;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.model.GameConfigModel;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.model.GameViewInfoModel;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.state.MGStateResponse;
@@ -24,6 +25,7 @@ import okhttp3.Response;
 
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.decorator.SudFSMMGListener;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.decorator.SudFSTAPPDecorator;
+import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.utils.ISudFSMStateHandleUtils;
 
 import tech.sud.mgp.core.ISudFSMMG;
 import tech.sud.mgp.core.ISudFSMStateHandle;
@@ -298,6 +300,24 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
     @Override
     public void onGameMGCommonGameState(ISudFSMStateHandle handle, SudMGPMGState.MGCommonGameState model) {
         super.onGameMGCommonGameState(handle, model);
+    }
+
+
+    @Override
+    public void onGameMGCommonSelfClickGameSettleCloseBtn(ISudFSMStateHandle handle, SudMGPMGState.MGCommonSelfClickGameSettleCloseBtn model) {
+        super.onGameMGCommonSelfClickGameSettleCloseBtn(handle, model);
+        MiniGameEvent.onGameSettleClose();
+    }
+
+    /**
+     * 12. 结算界面再来一局按钮点击状态（2021-12-27新增）
+     * 12. Tapping the Play Again button on the post-game screen (added on December 27, 2021)
+     * mg_common_self_click_game_settle_again_btn
+     */
+    @Override
+    public void onGameMGCommonSelfClickGameSettleAgainBtn(ISudFSMStateHandle handle, SudMGPMGState.MGCommonSelfClickGameSettleAgainBtn model) {
+        super.onGameMGCommonSelfClickGameSettleAgainBtn(handle, model);
+        MiniGameEvent.onGameSettleAgain();
     }
 
 }

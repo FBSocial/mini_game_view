@@ -79,16 +79,32 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
     protected final Handler handler = new Handler(Looper.getMainLooper());
     private ISudFSMStateHandle iSudFSMStateHandle;
 
-    public void initGameInfo(Map<String, Object> creationParams) {
-        appId = (String) creationParams.get("appId");
-        appKey = (String) creationParams.get("appKey");
-        isTestEnv = creationParams.get("isTestEnv") == null || (Boolean) (creationParams.get("isTestEnv"));
+    public void initGame(Activity activity, Map<String, Object> creationParams) {
+        initGameInfo(creationParams);
 
+        initGameConfig(creationParams);
+
+        initGameView(activity, creationParams);
+    }
+
+    private void initGameInfo(Map<String, Object> creationParams) {
         userId = (String) creationParams.get("userId");
         String gameIdString = (String) creationParams.get("gameId");
         assert gameIdString != null;
         playingGameId = Long.parseLong(gameIdString);
         gameRoomId = (String) creationParams.get("roomId");
+    }
+
+    private void initGameConfig(Map<String, Object> creationParams) {
+        appId = (String) creationParams.get("appId");
+        appKey = (String) creationParams.get("appKey");
+        isTestEnv = creationParams.get("isTestEnv") == null || (Boolean) (creationParams.get("isTestEnv"));
+
+        gameConfigModel.ui.level.hide = true;
+        // 结束弹窗 再来一局
+        gameConfigModel.ui.game_settle_again_btn.custom = true;
+        // 结束弹窗 关闭
+        gameConfigModel.ui.game_settle_close_btn.custom = true;
     }
 
     /**

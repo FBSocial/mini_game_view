@@ -24,4 +24,12 @@ public class MiniGameEvent {
     public static void onExpireCode() {
         sendNativeEvent("onExpireCode");
     }
+
+    public static void onGameSettleClose() {
+        sendNativeEvent("onGameSettleClose");
+    }
+
+    public static void onGameSettleAgain() {
+        sendNativeEvent("onGameSettleAgain");
+    }
 }
