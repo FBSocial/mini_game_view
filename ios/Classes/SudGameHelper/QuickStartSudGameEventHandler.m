@@ -18,8 +18,23 @@
     /// 可以在此根据自身应用需要配置游戏，例如配置声音
     /// You can configure the game according to your application needs here, such as configuring the sound
     gameCfgModel.gameSoundVolume = 100;
-    gameCfgModel.ui.lobby_players.hide = YES;
+    
     gameCfgModel.ui.level.hide = YES;
+    gameCfgModel.ui.lobby_rule.hide = YES;
+    gameCfgModel.ui.lobby_help_btn.hide = YES;
+    gameCfgModel.ui.lobby_players.hide = YES;
+    gameCfgModel.ui.lobby_player_captain_icon.hide = YES;
+    gameCfgModel.ui.lobby_player_kickout_icon.hide = YES;
+    gameCfgModel.ui.lobby_game_setting.hide = YES;
+    gameCfgModel.ui.lobby_setting_btn.hide = YES;
+    gameCfgModel.ui.share_btn.hide = YES;
+    gameCfgModel.ui.join_btn.hide = YES;
+    gameCfgModel.ui.cancel_join_btn.hide = YES;
+    gameCfgModel.ui.ready_btn.hide = YES;
+    gameCfgModel.ui.cancel_ready_btn.hide = YES;
+    gameCfgModel.ui.start_btn.hide = YES;
+
+    
     gameCfgModel.ui.game_settle_again_btn.custom = YES;
     gameCfgModel.ui.game_settle_close_btn.custom = YES;
     /// ...
