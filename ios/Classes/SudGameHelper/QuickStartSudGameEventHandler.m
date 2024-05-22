@@ -193,7 +193,7 @@
 }
 
 /// 游戏: 开始游戏按钮点击状态   MG_COMMON_SELF_CLICK_START_BTN
-/// Game: Start game button by clicking status MG_COMMON_SELF_CLICK_START_BTN
+/// Game: Start game button by clicking status MG_COMMON_SELF_CLI   CK_START_BTN
 - (void)onGameMGCommonSelfClickStartBtn:(nonnull id <ISudFSMStateHandle>)handle model:(MGCommonSelfClickStartBtn *)model {
     [handle success:[self.sudFSMMGDecorator handleMGSuccess]];
 }
