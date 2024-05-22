@@ -100,7 +100,24 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
         appKey = (String) creationParams.get("appKey");
         isTestEnv = creationParams.get("isTestEnv") == null || (Boolean) (creationParams.get("isTestEnv"));
 
+        // https://docs.sud.tech/zh-CN/app/Client/API/ISudFSMMG/onGetGameCfg.html
+//        gameConfigModel.ui.ping.hide = true;
         gameConfigModel.ui.level.hide = true;
+        gameConfigModel.ui.lobby_help_btn.hide = true;
+        gameConfigModel.ui.lobby_setting_btn.hide = true;
+        gameConfigModel.ui.lobby_rule.hide = true;
+        gameConfigModel.ui.lobby_players.hide = true;
+        gameConfigModel.ui.lobby_player_captain_icon.hide = true;
+        gameConfigModel.ui.lobby_player_kickout_icon.hide = true;
+        gameConfigModel.ui.lobby_game_setting.hide = true;
+        gameConfigModel.ui.share_btn.hide = true;
+//        gameConfigModel.ui.version.hide = true;
+        gameConfigModel.ui.join_btn.hide = true;
+        gameConfigModel.ui.cancel_join_btn.hide = true;
+        gameConfigModel.ui.ready_btn.hide = true;
+        gameConfigModel.ui.cancel_ready_btn.hide = true;
+        gameConfigModel.ui.start_btn.hide = true;
+
         // 结束弹窗 再来一局
         gameConfigModel.ui.game_settle_again_btn.custom = true;
         // 结束弹窗 关闭
