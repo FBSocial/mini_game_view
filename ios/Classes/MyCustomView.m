@@ -136,6 +136,11 @@
           [self.gameEventHandler.sudFSTAPPDecorator updateCode:self.loginCode];
       }
     result(nil);
+  } else if ([call.method isEqualToString:@"hitBomb"]) {
+      if ([call.arguments isKindOfClass:[NSString class]] ) {
+          [self sendMessage:call.arguments];
+      }
+    result(nil);
   } else {
     result(FlutterMethodNotImplemented);
   }
@@ -173,6 +178,12 @@
     sudGameConfigModel.userId = self.userId;
 
     [self.sudGameManager loadGame:sudGameConfigModel code:self.loginCode];
+}
+
+- (void)sendMessage: (NSString *)msg {
+    if (self.gameEventHandler.sudFSMMGDecorator.isHitBomb) {
+        [self.gameEventHandler.sudFSTAPPDecorator notifyAppComonDrawTextHit:NO keyWord:nil text:msg];
+    }
 }
 
 /// 销毁游戏
