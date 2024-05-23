@@ -175,6 +175,12 @@
     [self.sudGameManager loadGame:sudGameConfigModel code:self.loginCode];
 }
 
+- (void)sendMessage: (NSString *)msg {
+    if (self.gameEventHandler.sudFSMMGDecorator.isHitBomb) {
+        [self.gameEventHandler.sudFSTAPPDecorator notifyAppComonDrawTextHit:NO keyWord:nil text:msg];
+    }
+}
+
 /// 销毁游戏
 /// Destroy game
 - (void)destroyGame {
