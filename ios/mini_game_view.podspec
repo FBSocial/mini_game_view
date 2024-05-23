@@ -15,8 +15,8 @@ A new Flutter project.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'SudMGP', '1.3.8'
-  s.dependency 'SudMGPWrapper', '1.3.8'
+  s.dependency 'SudMGP_Lite', '1.3.8'
+  s.dependency 'SudMGPWrapper_Lite', '1.3.8'
   s.dependency 'Masonry','1.1.0'
   s.platform = :ios, '11.0'
 
