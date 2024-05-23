@@ -52,6 +52,12 @@
 @implementation MyCustomView {}
 
 
+- (void)dealloc {
+    // 在这里编写 PlatformView 销毁时需要执行的逻辑
+    [self destroyGame];
+}
+
+
 - (instancetype)initWithFrame:(CGRect)frame
                viewIdentifier:(int64_t)viewId
                     arguments:(id _Nullable)args
@@ -92,9 +98,9 @@
       [self.sudGameManager registerGameEventHandler:self.gameEventHandler];
       
       FlutterMethodChannel* methodChannel = [FlutterMethodChannel methodChannelWithName:@"mini_game_view/method" binaryMessenger:messenger];
-      
+      __weak typeof(self)weakSelf = self;
       [methodChannel setMethodCallHandler:^(FlutterMethodCall* call, FlutterResult result) {
-           [self handleMethodCall:call result:result];
+           [weakSelf handleMethodCall:call result:result];
          }];
       
       NSDictionary *data = @{@"action": @"onGameContainerCreated",};
