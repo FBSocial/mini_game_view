@@ -78,6 +78,7 @@ class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandle
 
     @Override
     public void dispose() {
+        gameViewModel.destroyMG();
         gameViewModel.setGameViewChangeListener(null);
         MiniGameViewPlugin.methodChannel.setMethodCallHandler(null);
     }

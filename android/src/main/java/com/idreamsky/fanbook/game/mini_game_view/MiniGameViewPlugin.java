@@ -29,8 +29,6 @@ public class MiniGameViewPlugin implements FlutterPlugin, MethodCallHandler, Act
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-        Log.d("onAttachedToActivity", "onAttachedToActivity: 22");
-
         this.flutterPluginBinding = flutterPluginBinding;
 
         methodChannel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "mini_game_view/method");
