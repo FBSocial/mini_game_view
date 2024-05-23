@@ -19,6 +19,7 @@ import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.decorator.SudFSTA
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.model.GameConfigModel;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.model.GameViewInfoModel;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.state.MGStateResponse;
+import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.utils.HSTextUtils;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.utils.SudJsonUtils;
 
 import java.util.Map;
@@ -580,4 +581,11 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
         return sudFSMMGDecorator.getSudFSMMGCache();
     }
 
+
+    public void messageHitState(String message) {
+        // 数字炸弹
+        if (sudFSMMGDecorator.isHitBomb() && HSTextUtils.isInteger(message)) {
+            sudFSTAPPDecorator.notifyAPPCommonSelfTextHitState(false, null, message);
+        }
+    }
 }

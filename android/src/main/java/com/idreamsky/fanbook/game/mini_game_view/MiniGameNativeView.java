@@ -97,6 +97,13 @@ class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandle
             String loginCode = (String) call.arguments;
             gameViewModel.updateCode(loginCode);
             result.success(true);
+        } else if (call.method.equals("hitBomb")) {
+            String msg = (String) call.arguments;
+            if (msg != null) {
+                gameViewModel.messageHitState(msg);
+            }
+            result.success(true);
+
         } else {
             result.notImplemented();
         }
