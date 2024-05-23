@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -5,32 +6,74 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:mini_game_view/mini_game_controller.dart';
+import 'package:mini_game_view/mini_game_info.dart';
+import 'package:mini_game_view/mini_game_view_method_channel.dart';
 
-class MiniGameView extends StatelessWidget {
-  final MiniGameController controller;
+const _onGameContainerCreatedAction = 'onGameContainerCreated';
+const _onExpireCodeAction = 'onExpireCode';
+const _onGameSettleCloseAction = 'onGameSettleClose';
+const _onGameSettleAgainAction = 'onGameSettleAgain';
+
+class MiniGameView extends StatefulWidget {
+  final MiniGameInfo info;
+
+  final MiniGameConfig config;
+
+  final MiniGameViewPosition? position;
+
+  final Future<String> Function() onGameLoginCode;
+  final Function()? onGameSettleAgain;
+  final Function()? onGameSettleClose;
 
   const MiniGameView({
-    required this.controller,
+    required this.config,
+    required this.info,
+    required this.onGameLoginCode,
+    this.onGameSettleClose,
+    this.onGameSettleAgain,
+    this.position,
     super.key,
   });
+
+  @override
+  State<MiniGameView> createState() => _MiniGameViewState();
+}
+
+class _MiniGameViewState extends State<MiniGameView> {
+  late StreamSubscription _subscription;
+  late MethodChannel _methodChannel;
+
+  @override
+  void initState() {
+    super.initState();
+    _methodChannel = MiniGameViewChannel.instance.methodChannel;
+    _subscription = MiniGameViewChannel.instance.eventChannel
+        .receiveBroadcastStream()
+        .listen(_eventListener);
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     const String viewType = 'mini-game-view-type';
     Map<String, dynamic> creationParams = <String, dynamic>{};
 
-    final config = controller.config;
+    final config = widget.config;
     creationParams['appId'] = config.appId;
     creationParams['appKey'] = config.appKey;
     creationParams['isTestEnv'] = config.isTestEnv;
 
-    final info = controller.info;
+    final info = widget.info;
     creationParams['roomId'] = info.roomId;
     creationParams['gameId'] = info.gameId;
     creationParams['userId'] = info.userId;
 
-    final position = controller.position;
+    final position = widget.position;
     creationParams['top'] = position?.top ?? 0;
     creationParams['left'] = position?.left ?? 0;
     creationParams['right'] = position?.right ?? 0;
@@ -69,5 +112,51 @@ class MiniGameView extends StatelessWidget {
       );
     }
     return const SizedBox.shrink();
+  }
+
+  void _eventListener(dynamic event) {
+    if (event is! Map) return;
+    // eg. {'action': 'onGameLogin', 'data': {}}
+    final action = event['action'];
+    // final data = event['data'];
+    if (action == _onGameContainerCreatedAction) {
+      _onGameContainerCreated();
+    } else if (action == _onExpireCodeAction) {
+      _onExpireCode();
+    } else if (action == _onGameSettleCloseAction) {
+      _onGameSettleClose();
+    } else if (action == _onGameSettleAgainAction) {
+      _onGameSettleAgain();
+    }
+  }
+
+  /// PlatformView创建后加载GameView父容器，并通知flutter层获取SUD的login code
+  /// 成功获取后立即开始加载游戏
+  Future<void> _onGameContainerCreated() async {
+    try {
+      final loginCode = await widget.onGameLoginCode.call();
+      if (loginCode.isEmpty) return;
+      await _methodChannel.invokeMethod('loginGame', loginCode);
+    } catch (e) {
+      debugPrint('_onGameContainerCreated, ${e.toString()}');
+    }
+  }
+
+  /// 处理游戏code过期
+  Future<void> _onExpireCode() async {
+    try {
+      final loginCode = await widget.onGameLoginCode.call();
+      await _methodChannel.invokeMethod('updateCode', loginCode);
+    } catch (e) {
+      debugPrint('_onGameContainerCreated, ${e.toString()}');
+    }
+  }
+
+  void _onGameSettleClose() {
+    widget.onGameSettleClose?.call();
+  }
+
+  void _onGameSettleAgain() {
+    widget.onGameSettleAgain?.call();
   }
 }

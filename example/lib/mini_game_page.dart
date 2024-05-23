@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mini_game_view/mini_game_controller.dart';
 import 'package:mini_game_view/mini_game_info.dart';
 import 'dart:async';
 
@@ -33,31 +32,15 @@ class _GameViewState extends State<GameView> {
   bool showMessage = true;
   final focusNode = FocusNode();
   late GameViewArguments arguments;
-  late MiniGameController miniGameController;
 
   @override
   void initState() {
     super.initState();
     arguments = Get.arguments as GameViewArguments;
-    miniGameController = MiniGameController(
-      config: MiniGameConfig(
-        appId: '1461564080052506636',
-        appKey: '03pNxK2lEXsKiiwrBQ9GbH541Fk2Sfnc',
-        isTestEnv: true,
-      ),
-      info: MiniGameInfo(
-        userId: arguments.userId,
-        gameId: arguments.gameId,
-        roomId: arguments.roomId,
-      ),
-      position: MiniGameViewPosition(bottom: 150),
-      onGameLoginCode: getLoginCode,
-    );
   }
 
   @override
   void dispose() {
-    miniGameController.dispose();
     super.dispose();
   }
 
@@ -98,7 +81,20 @@ class _GameViewState extends State<GameView> {
       backgroundColor: Colors.red,
       body: Stack(
         children: [
-          MiniGameView(controller: miniGameController),
+          MiniGameView(
+            config: MiniGameConfig(
+              appId: '1461564080052506636',
+              appKey: '03pNxK2lEXsKiiwrBQ9GbH541Fk2Sfnc',
+              isTestEnv: true,
+            ),
+            info: MiniGameInfo(
+              userId: arguments.userId,
+              gameId: arguments.gameId,
+              roomId: arguments.roomId,
+            ),
+            position: MiniGameViewPosition(bottom: 150),
+            onGameLoginCode: getLoginCode,
+          ),
           Positioned(
             bottom: 0,
             left: 0,
