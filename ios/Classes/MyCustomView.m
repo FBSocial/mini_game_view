@@ -136,6 +136,11 @@
           [self.gameEventHandler.sudFSTAPPDecorator updateCode:self.loginCode];
       }
     result(nil);
+  } else if ([call.method isEqualToString:@"hitBomb"]) {
+      if ([call.arguments isKindOfClass:[NSString class]] ) {
+          [self sendMessage:call.arguments];
+      }
+    result(nil);
   } else {
     result(FlutterMethodNotImplemented);
   }
