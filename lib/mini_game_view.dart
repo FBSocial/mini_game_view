@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mini_game_view/mini_game_controller.dart';
 import 'package:mini_game_view/mini_game_info.dart';
 import 'package:mini_game_view/mini_game_view_method_channel.dart';
 
@@ -24,6 +25,7 @@ class MiniGameView extends StatefulWidget {
   final Future<String> Function() onGameLoginCode;
   final Function()? onGameSettleAgain;
   final Function()? onGameSettleClose;
+  final MiniGameController? controller;
 
   const MiniGameView({
     required this.config,
@@ -32,6 +34,7 @@ class MiniGameView extends StatefulWidget {
     this.onGameSettleClose,
     this.onGameSettleAgain,
     this.position,
+    this.controller,
     super.key,
   });
 
@@ -42,10 +45,14 @@ class MiniGameView extends StatefulWidget {
 class _MiniGameViewState extends State<MiniGameView> {
   late StreamSubscription _subscription;
   late MethodChannel _methodChannel;
+  MiniGameController? controller;
 
   @override
   void initState() {
     super.initState();
+    controller =
+        widget.controller == null ? widget.controller : MiniGameController();
+
     _methodChannel = MiniGameViewChannel.instance.methodChannel;
     _subscription = MiniGameViewChannel.instance.eventChannel
         .receiveBroadcastStream()
