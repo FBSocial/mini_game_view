@@ -74,6 +74,8 @@
       NSInteger left = [args[@"left"] intValue];
       NSInteger right = [args[@"right"] intValue];
       NSInteger bottom = [args[@"bottom"] intValue];
+      NSInteger hiddenGameBg = [args[@"hideGameBg"] boolValue];
+      NSInteger hiddenloadingBg = [args[@"hideLoadingGameBg"] boolValue];
       [self addSubview:self.gameView];
       /// 1. step
       [self.gameView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -91,6 +93,8 @@
       self.gameEventHandler.left = left;
       self.gameEventHandler.right = right;
       self.gameEventHandler.bottom = bottom;
+      self.sudGameManager.hiddenloadingBg = hiddenloadingBg;
+      self.gameEventHandler.hiddenGameBg = hiddenGameBg;
       
       self.gameEventHandler.delegate = self;
       // 将游戏事件处理对象实例注册进游戏管理对象实例中

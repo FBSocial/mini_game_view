@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,assign) NSInteger right;
 @property(nonatomic,assign) NSInteger bottom;
 
+@property(nonatomic, assign)bool hiddenGameBg;
+
 @end
 
 NS_ASSUME_NONNULL_END

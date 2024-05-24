@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// SUD 游戏管理模块
 @interface SudGameManager : NSObject
 
+@property(nonatomic, assign)bool hiddenloadingBg;
+
 
 /// 一：注册游戏事件监听
 /// - Parameter eventHandler: eventHandler 游戏事件监听对象，所有游戏与app交互事件从这里回调给listener，备注：内部不强制引用，外部必须强持有该handler

@@ -33,6 +33,8 @@
     gameCfgModel.ui.ready_btn.hide = YES;
     gameCfgModel.ui.cancel_ready_btn.hide = YES;
     gameCfgModel.ui.start_btn.hide = YES;
+    
+    gameCfgModel.ui.game_bg.hide = self.hiddenGameBg;
 
     
     gameCfgModel.ui.game_settle_again_btn.custom = YES;
