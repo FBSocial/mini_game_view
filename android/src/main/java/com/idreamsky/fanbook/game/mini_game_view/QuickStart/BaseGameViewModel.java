@@ -103,7 +103,7 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
 
         gameConfigModel.ui.game_bg.hide = creationParams.get("hideGameBg") == null || (Boolean) (creationParams.get("hideGameBg"));
 
-        Boolean hideLoadingGameBg = creationParams.get("hideLoadingGameBg") == null || (Boolean) (creationParams.get("hideGameBg"));
+        Boolean hideLoadingGameBg = creationParams.get("hideLoadingGameBg") == null || (Boolean) (creationParams.get("hideLoadingGameBg"));
         SudMGP.getCfg().setShowLoadingGameBg(!hideLoadingGameBg);
 
         // https://docs.sud.tech/zh-CN/app/Client/API/ISudFSMMG/onGetGameCfg.html
