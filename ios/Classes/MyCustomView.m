@@ -182,7 +182,7 @@
 
 - (void)sendMessage: (NSString *)msg {
     if (self.gameEventHandler.sudFSMMGDecorator.isHitBomb) {
-        [self.gameEventHandler.sudFSTAPPDecorator notifyAppComonDrawTextHit:NO keyWord:nil text:msg];
+        [self.gameEventHandler.sudFSTAPPDecorator notifyAppComonDrawTextHit:false keyWord:@"" text:msg];
     }
 }
 
