@@ -29,13 +29,25 @@ class MiniGameInfo {
   });
 }
 
-class MiniGameViewPosition {
+class MiniGameSetting {
+  final bool hideGameBg;
+  final bool hideLoadingGameBg;
+  final ViewPosition? position;
+
+  MiniGameSetting({
+    this.hideGameBg = false,
+    this.hideLoadingGameBg = false,
+    this.position,
+  });
+}
+
+class ViewPosition {
   final int top;
   final int left;
   final int right;
   final int bottom;
 
-  MiniGameViewPosition({
+  ViewPosition({
     this.top = 0,
     this.left = 0,
     this.right = 0,

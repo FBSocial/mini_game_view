@@ -101,6 +101,11 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
         appKey = (String) creationParams.get("appKey");
         isTestEnv = creationParams.get("isTestEnv") == null || (Boolean) (creationParams.get("isTestEnv"));
 
+        gameConfigModel.ui.game_bg.hide = creationParams.get("hideGameBg") == null || (Boolean) (creationParams.get("hideGameBg"));
+
+        Boolean hideLoadingGameBg = creationParams.get("hideLoadingGameBg") == null || (Boolean) (creationParams.get("hideGameBg"));
+        SudMGP.getCfg().setShowLoadingGameBg(!hideLoadingGameBg);
+
         // https://docs.sud.tech/zh-CN/app/Client/API/ISudFSMMG/onGetGameCfg.html
 //        gameConfigModel.ui.ping.hide = true;
         gameConfigModel.ui.level.hide = true;
@@ -123,6 +128,7 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
         gameConfigModel.ui.game_settle_again_btn.custom = true;
         // 结束弹窗 关闭
         gameConfigModel.ui.game_settle_close_btn.custom = true;
+
     }
 
     /**

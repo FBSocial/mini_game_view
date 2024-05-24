@@ -92,7 +92,10 @@ class _GameViewState extends State<GameView> {
               gameId: arguments.gameId,
               roomId: arguments.roomId,
             ),
-            position: MiniGameViewPosition(bottom: 150),
+            setting: MiniGameSetting(
+              hideGameBg: true,
+              position: ViewPosition(bottom: 150),
+            ),
             onGameLoginCode: getLoginCode,
           ),
           Positioned(

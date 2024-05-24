@@ -20,7 +20,7 @@ class MiniGameView extends StatefulWidget {
 
   final MiniGameConfig config;
 
-  final MiniGameViewPosition? position;
+  final MiniGameSetting? setting;
 
   final Future<String> Function() onGameLoginCode;
   final Function()? onGameSettleAgain;
@@ -33,7 +33,7 @@ class MiniGameView extends StatefulWidget {
     required this.onGameLoginCode,
     this.onGameSettleClose,
     this.onGameSettleAgain,
-    this.position,
+    this.setting,
     this.controller,
     super.key,
   });
@@ -80,7 +80,11 @@ class _MiniGameViewState extends State<MiniGameView> {
     creationParams['gameId'] = info.gameId;
     creationParams['userId'] = info.userId;
 
-    final position = widget.position;
+    final setting = widget.setting;
+    final position = widget.setting?.position;
+
+    creationParams['hideGameBg'] = setting?.hideGameBg ?? false;
+    creationParams['hideLoadingGameBg'] = setting?.hideLoadingGameBg ?? false;
     creationParams['top'] = position?.top ?? 0;
     creationParams['left'] = position?.left ?? 0;
     creationParams['right'] = position?.right ?? 0;
