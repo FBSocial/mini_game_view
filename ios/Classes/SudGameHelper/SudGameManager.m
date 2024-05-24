@@ -59,7 +59,7 @@
     paramModel.appKey = configModel.appKey;
     paramModel.isTestEnv = configModel.isTestEnv;
     [SudMGP initSDK:paramModel listener:^(int retCode, const NSString * _Nonnull retMsg) {
-        
+        [[SudMGP getCfg] setShowLoadingGameBg:!weakSelf.hiddenloadingBg];
         if (retCode != 0) {
             NSLog(@"ISudFSMMG:initGameSDKWithAppID init sdk failed :%@(%@)", retMsg, @(retCode));
             return;
