@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.idreamsky.fanbook.game.mini_game_view.MiniGameEvent;
@@ -79,6 +80,8 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
     public GameConfigModel gameConfigModel = new GameConfigModel();
     protected final Handler handler = new Handler(Looper.getMainLooper());
     private ISudFSMStateHandle iSudFSMStateHandle;
+
+    private Activity mActivity;
 
     public void initGame(Activity activity, Map<String, Object> creationParams) {
         initGameInfo(creationParams);
@@ -177,6 +180,7 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
         if (activity.isDestroyed() || playingGameId <= 0) {
             return;
         }
+        mActivity = activity;
         initSdk(activity, loginCode);
     }
 
@@ -258,6 +262,23 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
         // Activity invocation：gameContainer.addView(view, FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         gameView = iSudFSTAPP.getGameView();
         onAddGameView(gameView);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setInputMode(activity);
+            }
+        }, 500);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setInputMode(activity);
+            }
+        }, 3000);
+    }
+
+    private void setInputMode(Activity activity) {
+        if (activity == null || activity.isDestroyed()) return;
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     /**
@@ -385,6 +406,7 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
      */
     @Override
     public void onGameStarted() {
+        setInputMode(mActivity);
     }
 
     /**

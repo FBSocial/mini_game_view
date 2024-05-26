@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -81,6 +82,7 @@ class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandle
         gameViewModel.destroyMG();
         gameViewModel.setGameViewChangeListener(null);
         MiniGameViewPlugin.methodChannel.setMethodCallHandler(null);
+        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     private void onGameContainerCreated() {
