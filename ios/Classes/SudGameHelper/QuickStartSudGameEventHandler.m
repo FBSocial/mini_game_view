@@ -39,8 +39,18 @@
     
     gameCfgModel.ui.game_settle_again_btn.custom = YES;
     gameCfgModel.ui.game_settle_close_btn.custom = YES;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                                    selector:@selector(applicationWillEnterForeground:)
+                                                        name:UIApplicationWillEnterForegroundNotification
+                                                      object:nil];
+    
     /// ...
     return gameCfgModel;
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification {
+    self.checkGamePlaying = YES;
 }
 
 - (nonnull GameViewInfoModel *)onGetGameViewInfo {
@@ -183,6 +193,7 @@
 /// 游戏销毁
 /// Game destruction
 - (void)onGameDestroyed {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     NSLog(@"Game destroyed");
 }
 
@@ -261,7 +272,7 @@
 
 /// 玩家: 队长状态  MG_COMMON_PLAYER_CAPTAIN
 /// Player: Captain status MG_COMMON_PLAYER_CAPTAIN
-- (void)onPlayerMGCommonPlayerCaptain:(id <ISudFSMStateHandle>)handle userId:(NSString *)userId model:(MGCommonPlayerCaptainModel *)model { 
+- (void)onPlayerMGCommonPlayerCaptain:(id <ISudFSMStateHandle>)handle userId:(NSString *)userId model:(MGCommonPlayerCaptainModel *)model {
 
     [handle success:[self.sudFSMMGDecorator handleMGSuccess]];
 }
@@ -269,6 +280,14 @@
 /// 玩家: 游戏状态  MG_COMMON_PLAYER_PLAYING
 /// Player: Game status MG_COMMON_PLAYER_PLAYING
 - (void)onPlayerMGCommonPlayerPlaying:(id <ISudFSMStateHandle>)handle userId:(NSString *)userId model:(MGCommonPlayerPlayingModel *)model {
+    if (self.checkGamePlaying) {
+        self.checkGamePlaying = NO;
+        bool isPlaying = [self.sudFSMMGDecorator isPlayerIsPlaying:userId];
+        if (!isPlaying) {
+            [[MyEventSink sharedInstance] sendDataToFlutter:@{@"action":@"onGameSettleClose"}];
+        }
+    }
+    [self.sudFSMMGDecorator isPlayerIsPlaying:userId];
     [handle success:[self.sudFSMMGDecorator handleMGSuccess]];
 }
 
