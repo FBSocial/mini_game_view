@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,assign) NSInteger bottom;
 
 @property(nonatomic, assign)bool hiddenGameBg;
+@property(nonatomic, assign)bool checkGamePlaying;
 
 @end
 
