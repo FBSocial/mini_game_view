@@ -12,8 +12,11 @@ import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.state.SudMGPMGSta
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -320,4 +323,24 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
         MiniGameEvent.onGameSettleAgain();
     }
 
+    @Override
+    public void onGameMGCommonGameSettle(ISudFSMStateHandle handle, SudMGPMGState.MGCommonGameSettle model) {
+        super.onGameMGCommonGameSettle(handle, model);
+        List<Map> myList = new ArrayList<>();
+        for (SudMGPMGState.MGCommonGameSettle.PlayerResult result : model.results) {
+            // 在这里处理每个 PlayerResult 对象
+            Map<String, Object> data = new HashMap<>();
+            data.put("uid",result.uid);
+            data.put("award",String.valueOf(result.award));
+            data.put("rank",String.valueOf(result.rank));
+            myList.add(data);
+        }
+        MiniGameEvent.onGameSettleShow(myList);
+    }
+
+    @Override
+    public void onPlayerMGCommonSelfClickGamePlayerIcon(ISudFSMStateHandle handle, String userId, SudMGPMGState.MGCommonSelfClickGamePlayerIcon model) {
+        super.onPlayerMGCommonSelfClickGamePlayerIcon(handle, userId, model);
+        MiniGameEvent.onClickUser(userId);
+    }
 }

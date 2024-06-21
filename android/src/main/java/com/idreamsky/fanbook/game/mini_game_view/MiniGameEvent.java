@@ -1,11 +1,12 @@
 package com.idreamsky.fanbook.game.mini_game_view;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MiniGameEvent {
 
-    public static void sendNativeEvent(String action, Map<String, Object> data) {
+    public static void sendNativeEvent(String action, Object data) {
         if (MiniGameViewPlugin.eventSink == null) return;
         Map<String, Object> event = new HashMap<>();
         event.put("action", action);
@@ -31,5 +32,13 @@ public class MiniGameEvent {
 
     public static void onGameSettleAgain() {
         sendNativeEvent("onGameSettleAgain");
+    }
+
+    public static void onGameSettleShow(List<Map> list) {
+        sendNativeEvent("onGameSettleShow",list);
+    }
+
+    public static void onClickUser(String uid) {
+        sendNativeEvent("onGameSettleShow",uid);
     }
 }
