@@ -127,6 +127,8 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
         gameConfigModel.ui.cancel_ready_btn.hide = true;
         gameConfigModel.ui.start_btn.hide = true;
 
+        gameConfigModel.ui.gameSettle.hide = true;
+
         // 结束弹窗 再来一局
         gameConfigModel.ui.game_settle_again_btn.custom = true;
         // 结束弹窗 关闭
