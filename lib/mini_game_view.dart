@@ -14,6 +14,8 @@ const _onGameContainerCreatedAction = 'onGameContainerCreated';
 const _onExpireCodeAction = 'onExpireCode';
 const _onGameSettleCloseAction = 'onGameSettleClose';
 const _onGameSettleAgainAction = 'onGameSettleAgain';
+const _onGameSettleShow = 'onGameSettleShow';
+const _onClickUser = 'onClickUser';
 
 class MiniGameView extends StatefulWidget {
   final MiniGameInfo info;
@@ -25,6 +27,8 @@ class MiniGameView extends StatefulWidget {
   final Future<String> Function() onGameLoginCode;
   final Function()? onGameSettleAgain;
   final Function()? onGameSettleClose;
+  final Function(String)? onClickUser;
+  final Function(List)? onGameSettleShow;
   final MiniGameController? controller;
 
   const MiniGameView({
@@ -33,6 +37,8 @@ class MiniGameView extends StatefulWidget {
     required this.onGameLoginCode,
     this.onGameSettleClose,
     this.onGameSettleAgain,
+    this.onClickUser,
+    this.onGameSettleShow,
     this.setting,
     this.controller,
     super.key,
@@ -138,6 +144,21 @@ class _MiniGameViewState extends State<MiniGameView> {
       _onGameSettleClose();
     } else if (action == _onGameSettleAgainAction) {
       _onGameSettleAgain();
+    } else if (action == _onGameSettleShow) {
+      final resultList = event["data"];
+      print("弹出结算界面");
+      if (resultList is List) {
+        for (Map m in resultList) {
+          print('用户:${m["uid"]},排名${m['rank']}，得分${m['award']}');
+        }
+        _onGameSettleShowAction(resultList);
+      }
+    } else if (action == _onClickUser) {
+      final resultList = event["data"];
+      if (resultList is String) {
+        print("点击了用户头像$resultList");
+        _onClickUserAction(resultList);
+      }
     }
   }
 
@@ -169,5 +190,17 @@ class _MiniGameViewState extends State<MiniGameView> {
 
   void _onGameSettleAgain() {
     widget.onGameSettleAgain?.call();
+  }
+
+  void _onGameSettleShowAction(List list) {
+    if (widget.onGameSettleShow != null) {
+      widget.onGameSettleShow!(list);
+    }
+  }
+
+  void _onClickUserAction(String uid) {
+    if (widget.onClickUser != null) {
+      widget.onClickUser!(uid);
+    }
   }
 }

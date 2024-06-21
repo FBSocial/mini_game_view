@@ -35,6 +35,7 @@
     gameCfgModel.ui.start_btn.hide = YES;
     
     gameCfgModel.ui.game_bg.hide = self.hiddenGameBg;
+    gameCfgModel.ui.gameSettle.hide = YES;
 
     
     gameCfgModel.ui.game_settle_again_btn.custom = YES;
@@ -223,6 +224,28 @@
 /// 游戏: 开始游戏按钮点击状态   MG_COMMON_SELF_CLICK_START_BTN
 /// Game: Start game button by clicking status MG_COMMON_SELF_CLI   CK_START_BTN
 - (void)onGameMGCommonSelfClickStartBtn:(nonnull id <ISudFSMStateHandle>)handle model:(MGCommonSelfClickStartBtn *)model {
+    [handle success:[self.sudFSMMGDecorator handleMGSuccess]];
+}
+
+/// 游戏: 游戏结算状态     MG_COMMON_GAME_SETTLE
+- (void)onGameMGCommonGameSettle:(nonnull id <ISudFSMStateHandle>)handle model:(MGCommonGameSettleModel *)model {
+    NSMutableArray * list = [NSMutableArray new];
+    for (MGCommonGameSettleResults *result in model.results) {
+        NSLog(@"用户id:%@，排名%ld,奖励%ld",result.uid,result.rank,result.award);
+        NSDictionary *dic = @{
+            @"uid":result.uid,
+            @"award":[NSString stringWithFormat:@"%@", @(result.award)],
+            @"rank":[NSString stringWithFormat:@"%@", @(result.rank)]
+        };
+        [list addObject:dic];
+    }
+    [[MyEventSink sharedInstance] sendDataToFlutter:@{@"action":@"onGameSettleShow",@"data":list}];
+    NSLog(@"调用结算完成");
+    [handle success:[self.sudFSMMGDecorator handleMGSuccess]];
+}
+
+- (void)onPlayerMGCommonSelfClickGamePlayerIcon:(id<ISudFSMStateHandle>)handle userId:(NSString *)userId model:(MGCommonSelfClickGamePlayerIconModel *)model {
+    [[MyEventSink sharedInstance] sendDataToFlutter:@{@"action":@"onClickUser",@"data":userId}];
     [handle success:[self.sudFSMMGDecorator handleMGSuccess]];
 }
 
