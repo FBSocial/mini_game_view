@@ -39,6 +39,6 @@ public class MiniGameEvent {
     }
 
     public static void onClickUser(String uid) {
-        sendNativeEvent("onGameSettleShow",uid);
+        sendNativeEvent("onClickUser",uid);
     }
 }
