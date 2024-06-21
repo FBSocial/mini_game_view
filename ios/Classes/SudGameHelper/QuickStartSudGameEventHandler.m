@@ -245,7 +245,7 @@
 }
 
 - (void)onPlayerMGCommonSelfClickGamePlayerIcon:(id<ISudFSMStateHandle>)handle userId:(NSString *)userId model:(MGCommonSelfClickGamePlayerIconModel *)model {
-    [[MyEventSink sharedInstance] sendDataToFlutter:@{@"action":@"onClickUser",@"data":userId}];
+    [[MyEventSink sharedInstance] sendDataToFlutter:@{@"action":@"onClickUser",@"data":model.uid}];
     [handle success:[self.sudFSMMGDecorator handleMGSuccess]];
 }
 

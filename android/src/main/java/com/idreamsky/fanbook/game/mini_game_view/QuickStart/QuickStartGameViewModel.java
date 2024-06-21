@@ -341,6 +341,6 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
     @Override
     public void onPlayerMGCommonSelfClickGamePlayerIcon(ISudFSMStateHandle handle, String userId, SudMGPMGState.MGCommonSelfClickGamePlayerIcon model) {
         super.onPlayerMGCommonSelfClickGamePlayerIcon(handle, userId, model);
-        MiniGameEvent.onClickUser(userId);
+        MiniGameEvent.onClickUser(model.uid);
     }
 }
