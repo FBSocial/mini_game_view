@@ -302,6 +302,9 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
      */
     @Override
     public void onGameMGCommonGameState(ISudFSMStateHandle handle, SudMGPMGState.MGCommonGameState model) {
+        if (model.gameState == 0) {
+            MiniGameEvent.onGameSettleClose();
+        }
         super.onGameMGCommonGameState(handle, model);
     }
 

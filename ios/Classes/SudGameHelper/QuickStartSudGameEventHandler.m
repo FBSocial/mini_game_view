@@ -267,6 +267,9 @@
 /// 游戏: 游戏状态   MG_COMMON_GAME_STATE
 /// Game: Game state MG_COMMON_GAME_STATE
 - (void)onGameMGCommonGameState:(id <ISudFSMStateHandle>)handle model:(MGCommonGameState *)model {
+    if (model.gameState == 0) {
+        [[MyEventSink sharedInstance] sendDataToFlutter:@{@"action":@"onGameSettleClose"}];
+    }
     [handle success:[self.sudFSMMGDecorator handleMGSuccess]];
 }
 
@@ -303,13 +306,6 @@
 /// 玩家: 游戏状态  MG_COMMON_PLAYER_PLAYING
 /// Player: Game status MG_COMMON_PLAYER_PLAYING
 - (void)onPlayerMGCommonPlayerPlaying:(id <ISudFSMStateHandle>)handle userId:(NSString *)userId model:(MGCommonPlayerPlayingModel *)model {
-    if (self.checkGamePlaying) {
-        self.checkGamePlaying = NO;
-        bool isPlaying = [self.sudFSMMGDecorator isPlayerIsPlaying:userId];
-        if (!isPlaying) {
-            [[MyEventSink sharedInstance] sendDataToFlutter:@{@"action":@"onGameSettleClose"}];
-        }
-    }
     [self.sudFSMMGDecorator isPlayerIsPlaying:userId];
     [handle success:[self.sudFSMMGDecorator handleMGSuccess]];
 }
