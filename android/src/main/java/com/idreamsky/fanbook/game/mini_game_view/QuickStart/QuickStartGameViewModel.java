@@ -70,6 +70,9 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
     // Language code for the game.
     public String languageCode = "zh-CN";
 
+
+    public boolean checkGamePlaying = false;
+
     // 游戏View回调
     // Game View callback.
 //    public final MutableLiveData<View> gameViewLiveData = new MutableLiveData<>();
@@ -302,8 +305,11 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
      */
     @Override
     public void onGameMGCommonGameState(ISudFSMStateHandle handle, SudMGPMGState.MGCommonGameState model) {
-        if (model.gameState == 0) {
+        if (checkGamePlaying && model.gameState == 0) {
+            checkGamePlaying = false;
             MiniGameEvent.onGameSettleClose();
+        } else {
+            checkGamePlaying = false;
         }
         super.onGameMGCommonGameState(handle, model);
     }
@@ -313,6 +319,14 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
     public void onGameMGCommonSelfClickGameSettleCloseBtn(ISudFSMStateHandle handle, SudMGPMGState.MGCommonSelfClickGameSettleCloseBtn model) {
         super.onGameMGCommonSelfClickGameSettleCloseBtn(handle, model);
         MiniGameEvent.onGameSettleClose();
+    }
+
+    @Override
+    public void onGameMGCommonGameNetworkState(ISudFSMStateHandle handle, SudMGPMGState.MGCommonGameNetworkState model) {
+        super.onGameMGCommonGameNetworkState(handle, model);
+        if (model.state == 0) {
+            checkGamePlaying = true;
+        }
     }
 
     /**

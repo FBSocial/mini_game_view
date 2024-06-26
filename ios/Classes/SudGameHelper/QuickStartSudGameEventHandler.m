@@ -51,7 +51,7 @@
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification {
-    self.checkGamePlaying = YES;
+
 }
 
 - (nonnull GameViewInfoModel *)onGetGameViewInfo {
@@ -267,9 +267,12 @@
 /// 游戏: 游戏状态   MG_COMMON_GAME_STATE
 /// Game: Game state MG_COMMON_GAME_STATE
 - (void)onGameMGCommonGameState:(id <ISudFSMStateHandle>)handle model:(MGCommonGameState *)model {
-    if (model.gameState == 0) {
-        [[MyEventSink sharedInstance] sendDataToFlutter:@{@"action":@"onGameSettleClose"}];
-    }
+   if (self.checkGamePlaying && model.gameState == 0) {
+        self.checkGamePlaying = NO;
+       [[MyEventSink sharedInstance] sendDataToFlutter:@{@"action":@"onGameSettleClose"}];
+   } else {
+       self.checkGamePlaying = NO;
+   }
     [handle success:[self.sudFSMMGDecorator handleMGSuccess]];
 }
 
@@ -306,7 +309,13 @@
 /// 玩家: 游戏状态  MG_COMMON_PLAYER_PLAYING
 /// Player: Game status MG_COMMON_PLAYER_PLAYING
 - (void)onPlayerMGCommonPlayerPlaying:(id <ISudFSMStateHandle>)handle userId:(NSString *)userId model:(MGCommonPlayerPlayingModel *)model {
-    [self.sudFSMMGDecorator isPlayerIsPlaying:userId];
+    [handle success:[self.sudFSMMGDecorator handleMGSuccess]];
+}
+
+- (void)onGameMGCommonGameNetworkState:(id<ISudFSMStateHandle>)handle model:(MGCommonGameNetworkStateModel *)model {
+    if (model.state == 0) {
+        self.checkGamePlaying = YES;
+    }
     [handle success:[self.sudFSMMGDecorator handleMGSuccess]];
 }
 
