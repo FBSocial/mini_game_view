@@ -235,7 +235,8 @@
         NSDictionary *dic = @{
             @"uid":result.uid,
             @"award":[NSString stringWithFormat:@"%@", @(result.award)],
-            @"rank":[NSString stringWithFormat:@"%@", @(result.rank)]
+            @"rank":[NSString stringWithFormat:@"%@", @(result.rank)],
+            @"gameRoundId": model.gameRoundId,
         };
         [list addObject:dic];
     }

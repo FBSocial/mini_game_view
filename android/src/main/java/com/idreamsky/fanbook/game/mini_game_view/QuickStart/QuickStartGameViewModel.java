@@ -350,6 +350,7 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
             data.put("uid",result.uid);
             data.put("award",String.valueOf(result.award));
             data.put("rank",String.valueOf(result.rank));
+            data.put("gameRoundId",model.gameRoundId);
             myList.add(data);
         }
         MiniGameEvent.onGameSettleShow(myList);
