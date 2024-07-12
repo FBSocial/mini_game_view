@@ -23,6 +23,8 @@ import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.state.MGStateResp
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.utils.HSTextUtils;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.utils.SudJsonUtils;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
 
 import tech.sud.mgp.core.ISudFSMStateHandle;
@@ -617,5 +619,22 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
         if (sudFSMMGDecorator.isHitBomb() && HSTextUtils.isInteger(message)) {
             sudFSTAPPDecorator.notifyAPPCommonSelfTextHitState(false, null, message);
         }
+    }
+
+    public ArrayList<String> getPlayingUserIds() {
+        SudFSMMGCache sudFSMMGCache = sudFSMMGDecorator.getSudFSMMGCache();
+        HashSet<String> playerReadySet = sudFSMMGCache.getPlayerReadySet();
+        ArrayList<String> list = new ArrayList<>();
+        if (playerReadySet == null) {
+            return list;
+        }
+        for (String userId : playerReadySet) {
+            try {
+                list.add(userId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return list;
     }
 }

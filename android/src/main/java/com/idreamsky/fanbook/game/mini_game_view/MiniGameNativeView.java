@@ -2,8 +2,6 @@ package com.idreamsky.fanbook.game.mini_game_view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -15,13 +13,11 @@ import com.idreamsky.fanbook.game.mini_game_view.QuickStart.GameViewChangeListen
 import com.idreamsky.fanbook.game.mini_game_view.QuickStart.QuickStartGameViewModel;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
-import io.flutter.plugin.common.BasicMessageChannel;
-import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.platform.PlatformView;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Map;
 
 class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandler {
@@ -91,23 +87,33 @@ class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandle
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-        if (call.method.equals("loginGame")) {
-            String loginCode = (String) call.arguments;
-            gameViewModel.login(mActivity, loginCode);
-            result.success(true);
-        } else if (call.method.equals("updateCode")) {
-            String loginCode = (String) call.arguments;
-            gameViewModel.updateCode(loginCode);
-            result.success(true);
-        } else if (call.method.equals("hitBomb")) {
-            String msg = (String) call.arguments;
-            if (msg != null) {
-                gameViewModel.messageHitState(msg);
+        switch (call.method) {
+            case "loginGame": {
+                String loginCode = (String) call.arguments;
+                gameViewModel.login(mActivity, loginCode);
+                result.success(true);
+                break;
             }
-            result.success(true);
-
-        } else {
-            result.notImplemented();
+            case "updateCode": {
+                String loginCode = (String) call.arguments;
+                gameViewModel.updateCode(loginCode);
+                result.success(true);
+                break;
+            }
+            case "hitBomb":
+                String msg = (String) call.arguments;
+                if (msg != null) {
+                    gameViewModel.messageHitState(msg);
+                }
+                result.success(true);
+                break;
+            case "playingUserIds":
+                ArrayList<String> userIds = gameViewModel.getPlayingUserIds();
+                result.success(userIds);
+                break;
+            default:
+                result.notImplemented();
+                break;
         }
     }
 }
