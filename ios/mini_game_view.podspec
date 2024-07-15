@@ -14,6 +14,8 @@ A new Flutter project.
   s.author           = { 'Your Company' => 'email@example.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
+  #s.resource = '**/*.{sp}'
+  s.resource_bundles = {'mini_game_view' => ['**/*.{sp}']}
   s.dependency 'Flutter'
   s.dependency 'SudMGP_Lite', '1.3.8'
   s.dependency 'SudMGPWrapper_Lite', '1.3.8'

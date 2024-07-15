@@ -65,7 +65,6 @@
             return;
         }
         NSLog(@"ISudFSMMG:initGameSDKWithAppID: init sdk successfully");
-        // 加载游戏
         // Load the game
         [weakSelf loadMG:configModel code:code];
     }];
@@ -102,6 +101,31 @@
     paramModel.mgId = configModel.gameId;
     paramModel.language = configModel.language;
     paramModel.gameViewContainer = configModel.gameView;
+    
+    // 加载本地游戏资源
+    NSDictionary *resDic = @{
+        @"1472142640866779138": @"deminers1.1.0.56",     //排雷兵
+        @"1739914495960793090": @"EightBall1.1.9.77",     //美式8球
+        @"1676069429630722049": @"gobangpro1.0.0.65",     //五子棋
+        @"1680881367829176322": @"jumpjump1.0.0.193",      //跳一跳
+        @"1734504890293981185": @"matchpairs1.0.0.98",      //连连看
+        @"1689904909564116994": @"monstercrushboom1.0.0.64", //对战消消乐
+        @"1468091457989509190": @"numberbomb1.0.3.74",      //数字炸弹
+        @"1472142559912517633": @"umo1.0.3.74",          //UMO
+    };
+    NSString *gid = [NSString stringWithFormat:@"%lld", configModel.gameId];
+    if([resDic.allKeys containsObject:gid]){
+        NSString *path = [resDic objectForKey:gid];
+        
+        NSBundle *bundle= [NSBundle bundleForClass:[self class]];
+        NSURL *url = [bundle URLForResource:@"mini_game_view" withExtension:@"bundle"];
+        bundle = [NSBundle bundleWithURL:url];
+        NSString *spPath = [bundle pathForResource:path ofType:@"sp"];
+        
+        [[SudMGP getCfg] addEmbeddedMGPkg:configModel.gameId mgPath:spPath];
+        NSLog(@"使用本地资源包加载游戏：%lld --> %@",configModel.gameId, spPath);
+    }
+    
     id <ISudFSTAPP> iSudFSTAPP = [SudMGP loadMG:paramModel fsmMG:self.sudGameEventHandler.sudFSMMGDecorator];
     [self.sudGameEventHandler.sudFSTAPPDecorator setISudFSTAPP:iSudFSTAPP];
 }
