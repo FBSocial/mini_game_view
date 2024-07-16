@@ -8,7 +8,7 @@
 
 #import "QuickStartSudGameEventHandler.h"
 #import "MyEventSink.h"
-
+#import "SudFSMMGCache.h"
 
 @implementation QuickStartSudGameEventHandler
 
@@ -195,6 +195,7 @@
 /// Game destruction
 - (void)onGameDestroyed {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [SudFSMMGCache.sharedInstance.userPosCache removeAllObjects];
     NSLog(@"Game destroyed");
 }
 
@@ -339,5 +340,11 @@
 - (void)onGameMGCommonGameSelfHeadphone:(nonnull id <ISudFSMStateHandle>)handle model:(MGCommonGameSelfHeadphone *)model {
 
     [handle success:[self.sudFSMMGDecorator handleMGSuccess]];
+}
+
+/// 游戏通知 app 玩家头像的坐标（支持 ludo, 飞镖, umo, 多米诺, teenpatti, texasholdem）MG_COMMON_GAME_PLAYER_ICON_POSITION
+- (void)onGameMgCommonGamePlayerIconPosition:(nonnull id <ISudFSMStateHandle>)handle model:(MgCommonGamePlayerIconPositionModel *)model{
+    NSLog(@"Game onGameMgCommonGamePlayerIconPosition");
+    [SudFSMMGCache.sharedInstance.userPosCache setValue:model.position forKey:model.uid];
 }
 @end
