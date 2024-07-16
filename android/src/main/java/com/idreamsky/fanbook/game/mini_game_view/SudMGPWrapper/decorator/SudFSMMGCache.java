@@ -54,6 +54,11 @@ public class SudFSMMGCache {
     private final HashMap<String, SudMGPMGState.MGCommonPlayerPlaying> playerPlayingMap = new HashMap<>();
 
     /**
+     * 记录玩家头像位置
+     */
+    private final HashMap<String, SudMGPMGState.MGCommonGamePlayerIconPosition> playerIconPositionMap = new HashMap<>();
+
+    /**
      * 队长状态 处理
      * Captain's status handling.
      */
@@ -181,6 +186,7 @@ public class SudFSMMGCache {
         playerInSet.clear();
         playerReadySet.clear();
         playerPlayingMap.clear();
+        playerIconPositionMap.clear();
     }
 
     /**
@@ -216,6 +222,14 @@ public class SudFSMMGCache {
     }
 
     /**
+     * 获取玩家用户头像位置集合
+     * Retrieve the set of player game states.
+     */
+    public HashMap<String, SudMGPMGState.MGCommonGamePlayerIconPosition> getPlayerIconPositionMap() {
+        return new HashMap<>(playerIconPositionMap);
+    }
+
+    /**
      * 返回当前游戏的状态，数值参数{@link SudMGPMGState.MGCommonGameState}
      * Return the current game state, numerical parameter {@link SudMGPMGState.MGCommonGameState}.
      */
@@ -224,6 +238,12 @@ public class SudFSMMGCache {
             return mgCommonGameStateModel.gameState;
         }
         return SudMGPMGState.MGCommonGameState.UNKNOW;
+    }
+
+    public void onGamePlayerIconPosition(SudMGPMGState.MGCommonGamePlayerIconPosition iconPosition) {
+        if (iconPosition == null) return;
+        String uid = iconPosition.uid;
+        playerIconPositionMap.put(uid, iconPosition);
     }
 
 }

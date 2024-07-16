@@ -18,6 +18,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.platform.PlatformView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandler {
@@ -111,6 +112,10 @@ class MiniGameNativeView implements PlatformView, MethodChannel.MethodCallHandle
                 ArrayList<String> userIds = gameViewModel.getPlayingUserIds();
                 result.success(userIds);
                 break;
+            case "playerIconPosition":
+                String playerId = (String) call.arguments;
+                HashMap<String, Object> position = gameViewModel.getPlayerIconPosition(playerId);
+                result.success(position);
             default:
                 result.notImplemented();
                 break;

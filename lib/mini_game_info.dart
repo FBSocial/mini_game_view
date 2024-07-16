@@ -54,3 +54,19 @@ class ViewPosition {
     this.bottom = 0,
   });
 }
+
+class MiniGamePlayerPosition {
+  final String userId;
+  final double x;
+  final double y;
+  final double width;
+  final double height;
+
+  MiniGamePlayerPosition({
+    required this.userId,
+    required this.x,
+    required this.y,
+    required this.width,
+    required this.height,
+  });
+}
