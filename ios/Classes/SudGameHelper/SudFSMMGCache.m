@@ -8,7 +8,6 @@
 #import "SudFSMMGCache.h"
 
 @interface SudFSMMGCache()
-@property(nonatomic,strong) NSMutableDictionary *userPosCache;
 @end
 
 @implementation SudFSMMGCache
