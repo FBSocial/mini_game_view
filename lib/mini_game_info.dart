@@ -22,10 +22,16 @@ class MiniGameInfo {
   /// 房间id
   final String roomId;
 
+  final String? ownerId;
+
+  final int? roomModel;
+
   MiniGameInfo({
     required this.userId,
     required this.gameId,
     required this.roomId,
+    this.ownerId,
+    this.roomModel,
   });
 }
 
