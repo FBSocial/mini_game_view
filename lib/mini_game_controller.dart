@@ -29,12 +29,16 @@ class MiniGameController {
     final positionMap =
         await _methodChannel.invokeMethod('playerIconPosition', playerId);
     if (positionMap is! Map) return null;
+    final x = positionMap['x'];
+    final y = positionMap['y'];
+    final width = positionMap['width'];
+    final height = positionMap['height'];
     return MiniGamePlayerPosition(
       userId: playerId,
-      x: positionMap['x'],
-      y: positionMap['y'],
-      width: positionMap['width'],
-      height: positionMap['height'],
+      x: (x is int) ? x.toDouble() : x,
+      y: (y is int) ? y.toDouble() : y,
+      width: (width is int) ? width.toDouble() : width,
+      height: (height is int) ? height.toDouble() : height,
     );
   }
 }
