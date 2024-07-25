@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:mini_game_view/mini_game_info.dart';
 import 'package:mini_game_view/mini_game_view_method_channel.dart';
 
 class MiniGameController {
@@ -21,5 +22,23 @@ class MiniGameController {
       userIds = result.whereType<String>().toList();
     }
     return userIds;
+  }
+
+  /// 获取指定用户的头像坐标及大小
+  Future<MiniGamePlayerPosition?> getPlayerPosition(String playerId) async {
+    final positionMap =
+        await _methodChannel.invokeMethod('playerIconPosition', playerId);
+    if (positionMap is! Map) return null;
+    final x = positionMap['x'];
+    final y = positionMap['y'];
+    final width = positionMap['width'];
+    final height = positionMap['height'];
+    return MiniGamePlayerPosition(
+      userId: playerId,
+      x: (x is int) ? x.toDouble() : x,
+      y: (y is int) ? y.toDouble() : y,
+      width: (width is int) ? width.toDouble() : width,
+      height: (height is int) ? height.toDouble() : height,
+    );
   }
 }

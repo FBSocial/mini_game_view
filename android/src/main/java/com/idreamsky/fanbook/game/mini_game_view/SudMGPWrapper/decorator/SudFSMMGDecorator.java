@@ -5,6 +5,8 @@
 
 package com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.decorator;
 
+import android.util.Log;
+
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.state.SudMGPMGState;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.utils.ISudFSMStateHandleUtils;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.utils.SudJsonUtils;
@@ -412,6 +414,7 @@ public class SudFSMMGDecorator implements ISudFSMMG {
                 break;
             case SudMGPMGState.MG_COMMON_GAME_PLAYER_ICON_POSITION: // 34. 游戏通知app玩家头像的坐标（只支持ludo）
                 SudMGPMGState.MGCommonGamePlayerIconPosition mgCommonGamePlayerIconPosition = SudJsonUtils.fromJson(dataJson, SudMGPMGState.MGCommonGamePlayerIconPosition.class);
+                sudFSMMGCache.onGamePlayerIconPosition(mgCommonGamePlayerIconPosition);
                 if (listener == null) {
                     ISudFSMStateHandleUtils.handleSuccess(handle);
                 } else {
@@ -1058,7 +1061,9 @@ public class SudFSMMGDecorator implements ISudFSMMG {
         }
     }
 
-    /** 获取队长userId */
+    /**
+     * 获取队长userId
+     */
     public String getCaptainUserId() {
         return sudFSMMGCache.getCaptainUserId();
     }
@@ -1101,7 +1106,9 @@ public class SudFSMMGDecorator implements ISudFSMMG {
         return sudFSMMGCache.getGameState();
     }
 
-    /** 获取缓存的状态 */
+    /**
+     * 获取缓存的状态
+     */
     public SudFSMMGCache getSudFSMMGCache() {
         return sudFSMMGCache;
     }

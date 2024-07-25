@@ -10,7 +10,7 @@
 #import "QuickStartSudGameEventHandler.h"
 #import <Masonry/Masonry.h>
 #import "MyEventSink.h"
-
+#import "SudFSMMGCache.h"
 
 // TODO: 替换由SudMGP提供的appId 及 appKey
 // TODO: Replace the appId and appKey provided by SudMGP
@@ -143,6 +143,21 @@
   } else if ([call.method isEqualToString:@"hitBomb"]) {
       if ([call.arguments isKindOfClass:[NSString class]] ) {
           [self sendMessage:call.arguments];
+      }
+    result(nil);
+  }else if ([call.method isEqualToString:@"playerIconPosition"]) {
+      if ([call.arguments isKindOfClass:[NSString class]] ) {
+          NSString *uid = call.arguments;
+          MgFrameRectModel *model = [SudFSMMGCache.sharedInstance.userPosCache objectForKey:uid];
+          if(model != nil){
+              result(@{
+                @"x": @(model.x),
+                @"y": @(model.y),
+                @"width": @(model.width),
+                @"height":@(model.height),
+              });
+              return;
+          }
       }
     result(nil);
   } else {

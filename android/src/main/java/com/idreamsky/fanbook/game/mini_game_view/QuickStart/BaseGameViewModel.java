@@ -20,10 +20,12 @@ import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.decorator.SudFSTA
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.model.GameConfigModel;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.model.GameViewInfoModel;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.state.MGStateResponse;
+import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.state.SudMGPMGState;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.utils.HSTextUtils;
 import com.idreamsky.fanbook.game.mini_game_view.SudMGPWrapper.utils.SudJsonUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -636,5 +638,19 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
             }
         }
         return list;
+    }
+
+    public HashMap<String, Object> getPlayerIconPosition(String playerId) {
+        SudFSMMGCache sudFSMMGCache = sudFSMMGDecorator.getSudFSMMGCache();
+        HashMap<String, SudMGPMGState.MGCommonGamePlayerIconPosition> playerIconPositionMap = sudFSMMGCache.getPlayerIconPositionMap();
+        if (playerIconPositionMap.isEmpty() || playerId.isEmpty()) return null;
+        SudMGPMGState.MGCommonGamePlayerIconPosition playerIconPosition = playerIconPositionMap.get(playerId);
+        if (playerIconPosition == null) return null;
+        HashMap<String, Object> position = new HashMap<>();
+        position.put("x", playerIconPosition.position.x);
+        position.put("y", playerIconPosition.position.y);
+        position.put("width", playerIconPosition.position.width);
+        position.put("height", playerIconPosition.position.height);
+        return position;
     }
 }
