@@ -10,8 +10,8 @@ class MiniGameController {
   }
 
   /// 数字炸弹命中关键字
-  void hitBomb(String msg) {
-    _methodChannel.invokeMethod('hitBomb', msg);
+  void sendMsgCompleted(String msg) {
+    _methodChannel.invokeMethod('sendMsgCompleted', msg);
   }
 
   /// 获取正在游戏中的玩家userid

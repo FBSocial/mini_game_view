@@ -35,6 +35,8 @@ public class SudFSMMGCache {
      */
     private boolean isHitBomb = false;
 
+    private String gameKeyWord = null;
+
     /**
      * 记录已经加入了游戏的玩家
      * Record the players who have already joined the game.
@@ -128,6 +130,7 @@ public class SudFSMMGCache {
     public void onGameMGCommonKeyWordToHit(SudMGPMGState.MGCommonKeyWordToHit model) {
         if (model != null) {
             isHitBomb = model.wordType.equals("number");
+            gameKeyWord = model.word;
         }
     }
 
@@ -173,6 +176,14 @@ public class SudFSMMGCache {
      */
     public boolean isHitBomb() {
         return isHitBomb;
+    }
+
+    public String getGameKeyWord() {
+        return gameKeyWord;
+    }
+
+    public void setGameKeyWord(String gameKeyWord) {
+        this.gameKeyWord = gameKeyWord;
     }
 
     /**

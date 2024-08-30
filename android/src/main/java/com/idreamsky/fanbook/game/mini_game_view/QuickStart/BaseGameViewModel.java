@@ -620,6 +620,17 @@ public abstract class BaseGameViewModel implements SudFSMMGListener {
         // 数字炸弹
         if (sudFSMMGDecorator.isHitBomb() && HSTextUtils.isInteger(message)) {
             sudFSTAPPDecorator.notifyAPPCommonSelfTextHitState(false, null, message);
+            sudFSMMGDecorator.setGameKeyWord(null);
+            return;
+        }
+        String keyword = sudFSMMGDecorator.getGameKeyWord();
+        if (keyword == null || keyword.isEmpty()) {
+            return;
+        }
+        // 判断是否命中了关键字，这里是contains判断。接入方可根据自身业务使用equals或者其它自定义的条件。
+        if (message.contains(keyword)) {
+            sudFSTAPPDecorator.notifyAPPCommonSelfTextHitState(true, keyword, message);
+            sudFSMMGDecorator.setGameKeyWord(null);
         }
     }
 

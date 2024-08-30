@@ -1093,6 +1093,14 @@ public class SudFSMMGDecorator implements ISudFSMMG {
         return sudFSMMGCache.isHitBomb();
     }
 
+    public String getGameKeyWord() {
+        return sudFSMMGCache.getGameKeyWord();
+    }
+
+    public void setGameKeyWord(String keyWord) {
+        sudFSMMGCache.setGameKeyWord(keyWord);
+    }
+
     // 销毁游戏
     public void destroyMG() {
         sudFSMMGCache.destroyMG();
