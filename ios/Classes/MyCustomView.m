@@ -140,7 +140,7 @@
           [self.gameEventHandler.sudFSTAPPDecorator updateCode:self.loginCode];
       }
     result(nil);
-  } else if ([call.method isEqualToString:@"hitBomb"]) {
+  } else if ([call.method isEqualToString:@"sendMsgCompleted"]) {
       if ([call.arguments isKindOfClass:[NSString class]] ) {
           [self sendMessage:call.arguments];
       }
@@ -202,6 +202,16 @@
 - (void)sendMessage: (NSString *)msg {
     if (self.gameEventHandler.sudFSMMGDecorator.isHitBomb) {
         [self.gameEventHandler.sudFSTAPPDecorator notifyAppComonDrawTextHit:false keyWord:@"" text:msg];
+        self.gameEventHandler.sudFSMMGDecorator.drawKeyWord = @"";
+        return;
+    }
+    NSString *keyword = self.gameEventHandler.sudFSMMGDecorator.drawKeyWord;
+    if (keyword == NULL || keyword.length == 0) {
+        return;
+    }
+    if ([msg containsString:keyword]) {
+        [self.gameEventHandler.sudFSTAPPDecorator notifyAppComonDrawTextHit:true keyWord:keyword text:msg];
+        self.gameEventHandler.sudFSMMGDecorator.drawKeyWord = @"";
     }
 }
 
