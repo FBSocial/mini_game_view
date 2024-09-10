@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <SudMGPWrapper_Lite/SudMGPWrapper.h>
+#import <SudMGPWrapper/SudMGPWrapper.h>
 NS_ASSUME_NONNULL_BEGIN
 
 /// 加载SudMGP SDK加载必须的业务参数

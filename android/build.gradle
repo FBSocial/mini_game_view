@@ -37,7 +37,7 @@ android {
 dependencies {
 
     // 引入 SudMGPSDK
-    api 'tech.sud.mgp:SudMGP-lite:1.3.8.1186@aar'
+    api 'tech.sud.mgp:SudMGP:1.3.8.1186@aar'
 
     // gson
     api 'com.google.code.gson:gson:2.8.6'
