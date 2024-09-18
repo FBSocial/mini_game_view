@@ -1,8 +1,8 @@
-deminers1.1.0.56.sp  	排雷兵
+deminers1.1.0.56.sp  	排雷兵    //已删除
 EightBall1.1.9.77.sp 	美式8球
 gobangpro1.0.0.65.sp 	五子棋
 jumpjump1.0.0.193.sp  	跳一跳
 matchpairs1.0.0.98.sp  	连连看
-monstercrushboom1.0.0.64.sp 对战消消乐
-numberbomb1.0.3.74.sp  	数字炸弹
-umo1.0.3.74.sp  		UMO
+monstercrushboom1.0.0.65.sp 对战消消乐  //已删除
+numberbomb1.0.3.74.sp  	数字炸弹   //已删除
+umo1.0.3.74.sp  		UMO //已删除
