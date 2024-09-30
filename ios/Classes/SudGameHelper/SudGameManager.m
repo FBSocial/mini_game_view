@@ -104,10 +104,10 @@
     
     // 加载本地游戏资源
     NSDictionary *resDic = @{
-        @"1739914495960793090": @"EightBall1.1.9.77",     //美式8球
-        @"1676069429630722049": @"gobangpro1.0.0.64",     //五子棋
-        @"1680881367829176322": @"jumpjump1.0.0.193",      //跳一跳
-        @"1734504890293981185": @"matchpairs1.0.0.98",      //连连看
+      //  @"1739914495960793090": @"EightBall1.1.9.77",     //美式8球
+      //  @"1676069429630722049": @"gobangpro1.0.0.64",     //五子棋
+      //  @"1680881367829176322": @"jumpjump1.0.0.193",      //跳一跳
+      //  @"1734504890293981185": @"matchpairs1.0.0.98",      //连连看
     };
     NSString *gid = [NSString stringWithFormat:@"%lld", configModel.gameId];
     if([resDic.allKeys containsObject:gid]){
