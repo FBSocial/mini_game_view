@@ -16,6 +16,7 @@ const _onGameSettleCloseAction = 'onGameSettleClose';
 const _onGameSettleAgainAction = 'onGameSettleAgain';
 const _onGameSettleShow = 'onGameSettleShow';
 const _onClickUser = 'onClickUser';
+const _onGameMGCommonGameCreateOrder = 'onGameMGCommonGameCreateOrder';
 
 class MiniGameView extends StatefulWidget {
   final MiniGameInfo info;
@@ -29,6 +30,7 @@ class MiniGameView extends StatefulWidget {
   final Function()? onGameSettleClose;
   final Function(String)? onClickUser;
   final Function(List)? onGameSettleShow;
+  final Function(Map)? onGameMGCommonGameCreateOrder;
   final MiniGameController? controller;
 
   const MiniGameView({
@@ -39,6 +41,7 @@ class MiniGameView extends StatefulWidget {
     this.onGameSettleAgain,
     this.onClickUser,
     this.onGameSettleShow,
+    this.onGameMGCommonGameCreateOrder,
     this.setting,
     this.controller,
     super.key,
@@ -159,6 +162,11 @@ class _MiniGameViewState extends State<MiniGameView> {
         print("点击了用户头像$resultList");
         _onClickUserAction(resultList);
       }
+    } else if (action == _onGameMGCommonGameCreateOrder) {
+      final resultList = event['data'];
+      if (resultList is Map) {
+        _onGameMGCommonGameCreateOrderAction(resultList);
+      }
     }
   }
 
@@ -201,6 +209,12 @@ class _MiniGameViewState extends State<MiniGameView> {
   void _onClickUserAction(String uid) {
     if (widget.onClickUser != null) {
       widget.onClickUser!(uid);
+    }
+  }
+
+  void _onGameMGCommonGameCreateOrderAction(Map order) {
+    if (widget.onGameMGCommonGameCreateOrder != null) {
+      widget.onGameMGCommonGameCreateOrder!(order);
     }
   }
 }

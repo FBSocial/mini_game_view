@@ -41,4 +41,9 @@ public class MiniGameEvent {
     public static void onClickUser(String uid) {
         sendNativeEvent("onClickUser",uid);
     }
+
+
+    public static void onGameMGCommonGameCreateOrder(Map<String, Object> order) {
+        sendNativeEvent("onGameMGCommonGameCreateOrder", order);
+    }
 }

@@ -344,7 +344,20 @@
 
 /// 游戏通知 app 玩家头像的坐标（支持 ludo, 飞镖, umo, 多米诺, teenpatti, texasholdem）MG_COMMON_GAME_PLAYER_ICON_POSITION
 - (void)onGameMgCommonGamePlayerIconPosition:(nonnull id <ISudFSMStateHandle>)handle model:(MgCommonGamePlayerIconPositionModel *)model{
-    NSLog(@"Game onGameMgCommonGamePlayerIconPosition");
+//    NSLog(@"Game onGameMgCommonGamePlayerIconPosition");
     [SudFSMMGCache.sharedInstance.userPosCache setValue:model.position forKey:model.uid];
 }
+
+- (void)onGameMGCommonGameCreateOrder:(nonnull id <ISudFSMStateHandle>)handle model:(MgCommonGameCreateOrderModel *)model {
+//    NSLog(@"Game onGameMGCommonGameCreateOrder");
+    NSDictionary *dicParam = @{
+        @"cmd": model.cmd,
+        @"fromUid": model.fromUid,
+        @"toUid": model.toUid,
+        @"value": [NSNumber numberWithInt: model.value],
+        @"payload": model.payload
+    };
+    [[MyEventSink sharedInstance] sendDataToFlutter:@{@"action":@"onGameMGCommonGameCreateOrder",@"data":dicParam}];
+}
+
 @end

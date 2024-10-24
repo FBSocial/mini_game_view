@@ -347,10 +347,10 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
         for (SudMGPMGState.MGCommonGameSettle.PlayerResult result : model.results) {
             // 在这里处理每个 PlayerResult 对象
             Map<String, Object> data = new HashMap<>();
-            data.put("uid",result.uid);
-            data.put("award",String.valueOf(result.award));
-            data.put("rank",String.valueOf(result.rank));
-            data.put("gameRoundId",model.gameRoundId);
+            data.put("uid", result.uid);
+            data.put("award", String.valueOf(result.award));
+            data.put("rank", String.valueOf(result.rank));
+            data.put("gameRoundId", model.gameRoundId);
             myList.add(data);
         }
         MiniGameEvent.onGameSettleShow(myList);
@@ -360,5 +360,17 @@ public class QuickStartGameViewModel extends BaseGameViewModel {
     public void onPlayerMGCommonSelfClickGamePlayerIcon(ISudFSMStateHandle handle, String userId, SudMGPMGState.MGCommonSelfClickGamePlayerIcon model) {
         super.onPlayerMGCommonSelfClickGamePlayerIcon(handle, userId, model);
         MiniGameEvent.onClickUser(model.uid);
+    }
+
+    @Override
+    public void onGameMGCommonGameCreateOrder(ISudFSMStateHandle handle, SudMGPMGState.MGCommonGameCreateOrder model) {
+        super.onGameMGCommonGameCreateOrder(handle, model);
+        Map<String, Object> data = new HashMap<>();
+        data.put("cmd", model.cmd);
+        data.put("fromUid", model.fromUid);
+        data.put("toUid", model.toUid);
+        data.put("value", model.value);
+        data.put("payload", model.payload);
+        MiniGameEvent.onGameMGCommonGameCreateOrder(data);
     }
 }
